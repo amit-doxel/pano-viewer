@@ -1,0 +1,9 @@
+.left-wrapper {
+  position: fixed;
+  left: 25px;
+  bottom: 50%;
+  text-align: center;
+  z-index: 5;
+  transform: translateX(-50%);
+  pointer-events: none;
+}

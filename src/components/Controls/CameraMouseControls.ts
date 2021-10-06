@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-const SPEED_FACTOR = 0.01;
+const SPEED_FACTOR = 0.01 * 0.1;
 
 export class CameraMouseControls {
   private _camera: THREE.Camera;
@@ -27,7 +27,7 @@ export class CameraMouseControls {
     const onMousemove = (event: any) => {
       if (this._mousePressed) {
         const { dx, dy } = this.getMouseXYmovement(event);
-        this.setCameraOrientation(dx, dy);
+        this.setCameraOrientation(-dx, -dy);
       }
     };
     this._canvas.addEventListener('mousemove', onMousemove, false);

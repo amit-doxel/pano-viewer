@@ -11,7 +11,7 @@
 
 .bottom-bar {
   color: #fff;
-  background-color: #333333;
+  background-color: #373737;
   box-shadow: 1px 3px 10px 0 rgb(0 0 0 / 50%);
   margin: 0 5px;
   pointer-events: all;
@@ -29,7 +29,7 @@
 }
 
 .button:hover {
-  background-color: blue;
+  background-color: #ff8000;
 }
 
 .bottom-wrapper .bottom-bar {
@@ -38,4 +38,8 @@
 
 .bottom-wrapper .bottom-bar .button {
   float: left;
+  float: left;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }

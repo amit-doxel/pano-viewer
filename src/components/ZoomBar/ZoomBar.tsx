@@ -7,10 +7,10 @@ export const ZoomBar: React.FC = () => {
     <div className='zoom-wrapper'>
       <div className='bottom-bar zoom-bar'>
         <div className='button'>
-          {/* <ion-icon name='remove-outline' size='large' role='zoom-in'></ion-icon> */}
+          <img src='assets/icons/minus.svg' />
         </div>
         <div className='button'>
-          {/* <ion-icon name='add-outline' size='large' role='zoom-in'></ion-icon> */}
+          <img src='/assets/icons/Add.svg'></img>
         </div>
       </div>
     </div>

@@ -1,0 +1,14 @@
+.header {
+    position: absolute;
+    left: 10px;
+    top: 2px;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.cross-icon {
+    position: fixed;
+    right: 10px;
+    top: 20px;
+    cursor: pointer;
+}

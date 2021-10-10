@@ -18,7 +18,10 @@ export const useScene = () => {
     camera.rotation.y = Math.PI;
     camera.rotation.z = Math.PI;
 
-    const sphere = createSphereMesh(panoImage);
+    const sphere = createSphereMesh(
+      'https://threejs.org/examples/textures/2294472375_24a3b8ef46_o.jpg'
+      // will remove this link and add panoImage when the real API integration will be done
+    );
 
     scene.add(sphere);
   }, [loading, panoImage]);

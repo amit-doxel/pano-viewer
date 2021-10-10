@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import * as THREE from "three";
+import { useEffect } from 'react';
+import * as THREE from 'three';
 
-import useFetchPanoImage from "./useFetchPanoImage";
+import useFetchPanoImage from './useFetchPanoImage';
 
 export const useScene = () => {
   const scene = new THREE.Scene();
@@ -29,7 +29,7 @@ export const useScene = () => {
   return {
     scene: scene,
     camera: camera,
-    loading: loading
+    loading: loading,
   };
 };
 

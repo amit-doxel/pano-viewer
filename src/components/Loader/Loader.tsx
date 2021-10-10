@@ -1,4 +1,5 @@
-import React from "react";
-import "./styles.css";
+import React from 'react';
 
-export const Loader: React.FC = () => <div className="loader"></div>;
+import './styles.css';
+
+export const Loader: React.FC = () => <div className='loader'></div>;

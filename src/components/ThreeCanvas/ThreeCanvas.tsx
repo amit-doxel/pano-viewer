@@ -1,8 +1,8 @@
-import React, { useRef, useLayoutEffect } from 'react';
-import * as THREE from 'three';
+import React, { useRef, useLayoutEffect } from "react";
+import * as THREE from "three";
 
-import { initDefaultControls } from '../Controls/DefaultControls';
-import { useCountRenders } from '../../hooks/useCountRenders';
+import { initDefaultControls } from "../Controls/DefaultControls";
+import { useCountRenders } from "../../hooks/useCountRenders";
 
 interface Props {
   scene: any;
@@ -12,7 +12,7 @@ interface Props {
 
 export const ThreeCanvas: React.FC<Props> = ({ scene, camera, onUpdate }) => {
   // debug info, will keep this react becomes stable
-  useCountRenders('ThreeCanvas');
+  useCountRenders("ThreeCanvas");
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -42,13 +42,13 @@ export const ThreeCanvas: React.FC<Props> = ({ scene, camera, onUpdate }) => {
     return () => {
       disposeControls();
     };
-  }, []);
+  }, [scene, camera, onUpdate]);
 
   return (
     <>
       <canvas
         ref={canvasRef}
-        style={{ display: 'block', width: '100%', height: '100vh' }}
+        style={{ display: "block", width: "100%", height: "100vh" }}
         width={1920}
         height={1080}
       ></canvas>

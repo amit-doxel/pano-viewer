@@ -26,6 +26,7 @@ export const useScene = () => {
   return {
     scene: scene,
     camera: camera,
+    loading: loading
   };
 };
 

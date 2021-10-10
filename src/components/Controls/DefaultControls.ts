@@ -1,4 +1,4 @@
-import { CameraMouseControls } from './CameraMouseControls';
+import { CameraMouseControls } from "./CameraMouseControls";
 
 export const initDefaultControls = (
   canvas: any,
@@ -11,10 +11,46 @@ export const initDefaultControls = (
     camera.fov = zoomLevel.get(e.deltaY);
     camera.updateProjectionMatrix();
   };
-  canvas.addEventListener('wheel', onWheelInCanvas);
+  canvas.addEventListener("wheel", onWheelInCanvas);
+
+  const zoomInButton = document.getElementById("zoom-in");
+  const zoomOutButton = document.getElementById("zoom-out");
+
+  const zoomInFunction = (e: any) => {
+    const fov = getFov();
+    camera.fov = clickZoom(fov, "zoomIn");
+    camera.updateProjectionMatrix();
+  };
+  zoomInButton?.addEventListener("click", zoomInFunction);
+
+  const zoomOutFunction = (e: any) => {
+    const fov = getFov();
+    camera.fov = clickZoom(fov, "zoomOut");
+    camera.updateProjectionMatrix();
+  };
+  zoomOutButton?.addEventListener("click", zoomOutFunction);
+
+  const clickZoom = (value: number, zoomType: string) => {
+    if (value >= 20 && zoomType === "zoomIn") {
+      return value - 5;
+    } else if (value <= 75 && zoomType === "zoomOut") {
+      return value + 5;
+    } else {
+      return value;
+    }
+  };
+
+  const getFov = () => {
+    return Math.floor(
+      (2 *
+        Math.atan(camera.getFilmHeight() / 2 / camera.getFocalLength()) *
+        180) /
+        Math.PI
+    );
+  };
 
   return () => {
-    canvas.removeEventListener('wheel', onWheelInCanvas);
+    canvas.removeEventListener("wheel", onWheelInCanvas);
   };
 };
 

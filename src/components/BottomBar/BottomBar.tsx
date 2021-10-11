@@ -8,13 +8,13 @@ export const BottomBar: React.FC = () => {
     <div className='bottom-wrapper'>
       <div className='bottom-bar'>
         <div className='button'>
-          <img src='/assets/icons/square.svg'></img>
+          <img src='/assets/icons/square.svg' alt='square-icon'></img>
         </div>
         <div className='button'>
-          <img src='/assets/icons/dual.svg'></img>
+          <img src='/assets/icons/dual.svg' alt='split-screen-icon'></img>
         </div>
         <div className='button'>
-          <img src='/assets/icons/bim.svg'></img>
+          <img src='/assets/icons/bim.svg' alt='bim-icon'></img>
         </div>
       </div>
       <ZoomBar></ZoomBar>

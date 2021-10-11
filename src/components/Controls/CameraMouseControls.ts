@@ -22,6 +22,7 @@ export class CameraMouseControls {
       event.stopPropagation();
       this._mousePressed = true;
     };
+
     this._canvas.addEventListener('mousedown', onMousedown, false);
 
     const onMousemove = (event: any) => {
@@ -30,6 +31,7 @@ export class CameraMouseControls {
         this.setCameraOrientation(dx, dy);
       }
     };
+
     this._canvas.addEventListener('mousemove', onMousemove, false);
 
     const onMouseup = (event: any) => {

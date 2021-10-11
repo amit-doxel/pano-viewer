@@ -42,7 +42,7 @@ export const ThreeCanvas: React.FC<Props> = ({ scene, camera, onUpdate }) => {
     return () => {
       disposeControls();
     };
-  }, []);
+  }, [scene, camera, onUpdate]);
 
   return (
     <>

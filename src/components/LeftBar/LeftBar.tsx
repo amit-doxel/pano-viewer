@@ -7,13 +7,13 @@ export const LeftBar: React.FC = () => {
     <div className='left-wrapper'>
       <div className='bottom-bar'>
         <div className='button'>
-          <img src='/assets/icons/switch.svg'></img>
+          <img src='/assets/icons/switch.svg' alt='switch-icon'></img>
         </div>
         <div className='button'>
-          <img src='/assets/icons/floor.svg'></img>
+          <img src='/assets/icons/floor.svg' alt='floor-icon'></img>
         </div>
         <div className='button'>
-          <img src='/assets/icons/share.svg'></img>
+          <img src='/assets/icons/share.svg' alt='share-icon'></img>
         </div>
       </div>
     </div>

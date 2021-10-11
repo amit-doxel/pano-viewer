@@ -1,12 +1,12 @@
-.bottom-wrapper {
-  position: absolute;
-  left: 50%;
-  bottom: 10px;
-  width: calc(100% - 20px);
-  text-align: center;
-  z-index: 5;
-  transform: translateX(-50%);
-  pointer-events: none;
+.bottom-wrapper{
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    width: calc(100% - 20px);
+    text-align: center;
+    z-index: 5;
+    transform: translateX(-50%);
+    pointer-events: none;
 }
 
 .bottom-bar {
@@ -19,13 +19,13 @@
 }
 
 .button {
-  position: relative;
-  cursor: pointer;
-  width: 28px;
-  height: 28px;
-  padding: 10px;
-  border-bottom: 1px solid rgba(34, 34, 34, 0);
-  outline: none;
+    position: relative;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    padding: 10px;
+    border-bottom: 1px solid rgba(34, 34, 34, 0.0);
+    outline: none;
 }
 
 .button:hover {
@@ -33,7 +33,7 @@
 }
 
 .bottom-wrapper .bottom-bar {
-  display: inline-block;
+    display: inline-block;
 }
 
 .bottom-wrapper .bottom-bar .button {

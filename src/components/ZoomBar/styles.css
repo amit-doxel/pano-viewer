@@ -1,9 +1,9 @@
 .zoom-wrapper {
-  position: absolute;
-  right: 50px;
-  bottom: 2px;
-  text-align: center;
-  z-index: 5;
-  transform: translateX(-50%);
-  pointer-events: none;
+    position: absolute;
+    right: 50px;
+    bottom: 2px;
+    text-align: center;
+    z-index: 5;
+    transform: translateX(-50%);
+    pointer-events: none;
 }

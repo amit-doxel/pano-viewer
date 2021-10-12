@@ -1,4 +1,4 @@
-.bottom-wrapper{
+.bottom-wrapper {
     position: absolute;
     left: 50%;
     bottom: 10px;
@@ -9,13 +9,13 @@
     pointer-events: none;
 }
 
-.bottom-bar {
-  color: #fff;
-  background-color: #373737;
-  box-shadow: 1px 3px 10px 0 rgb(0 0 0 / 50%);
-  margin: 0 5px;
-  pointer-events: all;
-  text-align: center;
+.bar-theme {
+    color: #fff;
+    background-color: #373737;
+    box-shadow: 1px 3px 10px 0 rgb(0 0 0 / 50%);
+    margin: 0 5px;
+    pointer-events: all;
+    text-align: center;
 }
 
 .button {
@@ -24,22 +24,22 @@
     width: 28px;
     height: 28px;
     padding: 10px;
-    border-bottom: 1px solid rgba(34, 34, 34, 0.0);
+    border-bottom: 1px solid rgba(34, 34, 34, 0);
     outline: none;
 }
 
 .button:hover {
-  background-color: #ff8000;
+    background-color: #ff8000;
 }
 
-.bottom-wrapper .bottom-bar {
+.bottom-wrapper .bar-theme {
     display: inline-block;
 }
 
-.bottom-wrapper .bottom-bar .button {
-  float: left;
-  float: left;
-  align-items: center;
-  justify-content: center;
-  display: flex;
+.bottom-wrapper .bar-theme .button {
+    float: left;
+    float: left;
+    align-items: center;
+    justify-content: center;
+    display: flex;
 }

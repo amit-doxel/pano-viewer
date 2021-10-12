@@ -1,7 +1,7 @@
-.left-wrapper{
+.left-wrapper {
     position: fixed;
     left: 25px;
-    bottom: 50%;
+    top: 25%;
     text-align: center;
     z-index: 5;
     transform: translateX(-50%);

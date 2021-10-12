@@ -4,21 +4,21 @@ import { useFloorNavContext } from '../../context/FloorNavContext/useFloorNavCon
 import './styles.css';
 
 export const LeftBar: React.FC = () => {
-    const { floorNav, setFloorNav } = useFloorNavContext();
+  const { floorNav, setFloorNav } = useFloorNavContext();
 
-    return (
-        <div className='left-wrapper'>
-            <div className='bar-theme'>
-                <div className='button' onClick={() => setFloorNav(!floorNav)}>
-                    <img src='/assets/icons/switch.svg' alt='switch-icon'></img>
-                </div>
-                <div className='button'>
-                    <img src='/assets/icons/floor.svg' alt='floor-icon'></img>
-                </div>
-                <div className='button'>
-                    <img src='/assets/icons/share.svg' alt='share-icon'></img>
-                </div>
-            </div>
+  return (
+    <div className='left-wrapper'>
+      <div className='bar-theme'>
+        <div className='button' onClick={() => setFloorNav(!floorNav)}>
+          <img src='/assets/icons/switch.svg' alt='switch-icon'></img>
         </div>
-    );
+        <div className='button'>
+          <img src='/assets/icons/floor.svg' alt='floor-icon'></img>
+        </div>
+        <div className='button'>
+          <img src='/assets/icons/share.svg' alt='share-icon'></img>
+        </div>
+      </div>
+    </div>
+  );
 };

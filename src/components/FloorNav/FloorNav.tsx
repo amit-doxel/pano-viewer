@@ -7,8 +7,7 @@ import './styles.css';
 export const FloorNav: React.FC = () => {
   const { floorNav } = useFloorNavContext();
   const { floorNavData } = useFloorNavData();
-  console.log(floorNavData);
-  var FloorList = floorNavData?.map((floor) => {
+  const FloorList = floorNavData?.map((floor) => {
     return (
       <div className='nav-item' key={floor.id}>
         {floor.title}

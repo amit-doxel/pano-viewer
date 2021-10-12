@@ -1,28 +1,24 @@
 import React from 'react';
 
+import { useFloorNavData } from '../../hooks';
 import { useFloorNavContext } from '../../context/FloorNavContext/useFloorNavContext';
 import './styles.css';
 
 export const FloorNav: React.FC = () => {
   const { floorNav } = useFloorNavContext();
+  const { floorNavData } = useFloorNavData();
+  console.log(floorNavData);
+  var FloorList = floorNavData?.map((floor) => {
+    return (
+      <div className='nav-item' key={floor.id}>
+        {floor.title}
+      </div>
+    );
+  });
   if (floorNav) {
     return (
       <div className='floor-nav-wrapper'>
-        <div className='bar-theme floor-nav'>
-          <div className='nav-item'>Floor 1</div>
-          <div className='nav-item'>Floor 2</div>
-          <div className='nav-item'>Floor 3</div>
-          <div className='nav-item'>Underground</div>
-          <div className='nav-item'>Floor</div>
-          <div className='nav-item'>Floor</div>
-          <div className='nav-item'>Floor</div>
-          <div className='nav-item'>Floor</div>
-          <div className='nav-item'>Floor</div>
-          <div className='nav-item'>Floor</div>
-          <div className='nav-item'>Floor</div>
-          <div className='nav-item'>Floor</div>
-          <div className='nav-item'>Floor</div>
-        </div>
+        <div className='bar-theme floor-nav'>{FloorList}</div>
       </div>
     );
   } else {

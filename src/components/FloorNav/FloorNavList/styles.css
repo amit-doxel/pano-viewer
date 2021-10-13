@@ -1,0 +1,17 @@
+.nav-item {
+  padding: 10px 0px 16px 16px;
+}
+
+.nav-item:hover {
+  background-color: #8080807a;
+  cursor: pointer;
+}
+
+.disabled-nav-item {
+  background-color: #6f6f6f2e;
+  color: #89898a;
+  padding: 10px 0px 16px 16px;
+}
+.disabled-nav-item:hover {
+  cursor: auto;
+}

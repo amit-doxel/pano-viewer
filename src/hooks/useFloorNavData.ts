@@ -1,27 +1,26 @@
 import { useState, useEffect } from 'react';
+import { getData } from '../utils/get-data';
 
 export interface FloorDataType {
-  userId: number;
   id: number;
-  title: string;
-  completed: boolean;
+  floor_name: string;
+  scenes: number;
 }
 
 export function useFloorNavData() {
   const [floorNavData, setFloorNavData] = useState<FloorDataType[]>();
 
   useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/todos')
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setFloorNavData(result.slice(0, 100));
-        },
-        (error) => {
-          console.log(error);
-        },
-      );
+    fetchData();
   }, []);
+  const fetchData = async () => {
+    try {
+      const response = await getData('floor_nav.json', 'json');
+      setFloorNavData(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return {
     floorNavData,

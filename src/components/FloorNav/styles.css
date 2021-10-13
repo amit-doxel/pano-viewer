@@ -19,12 +19,3 @@
     0px 5px 5px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
 }
-
-.nav-item {
-  padding: 10px 0px 16px 16px;
-}
-
-.nav-item:hover {
-  background-color: #8080807a;
-  cursor: pointer;
-}

@@ -9,20 +9,21 @@ import { FloorNav } from '../FloorNav';
 
 import { useScene, useCountRenders } from '../../hooks';
 import { FloorNavContextProvider } from '../../context/FloorNavContext/FloorNavContextProvider';
+import { CurrentFloorSceneContextProvider } from '../../context/CurrentFloorSceneContext/CurrentFloorSceneContextProvider';
 
 export const PanoViewer: React.FC = () => {
   // debug info, will keep this react becomes stable
   useCountRenders('PanoViewer');
-  const { scene, camera, loading } = useScene();
-
-  if (loading) return <Loader />;
+  const { scene, camera } = useScene();
   return (
     <FloorNavContextProvider>
-      <Header />
-      <ThreeCanvas scene={scene} camera={camera} />
-      <LeftBar />
-      <FloorNav />
-      <BottomBar />
+      <CurrentFloorSceneContextProvider>
+        <Header />
+        <ThreeCanvas scene={scene} camera={camera} />
+        <LeftBar />
+        <FloorNav />
+        <BottomBar />
+      </CurrentFloorSceneContextProvider>
     </FloorNavContextProvider>
   );
 };

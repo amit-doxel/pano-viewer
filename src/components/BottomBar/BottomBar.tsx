@@ -1,13 +1,17 @@
 import React from 'react';
 
+import { ZoomBar } from '../ZoomBar';
 import './styles.css';
-import { ZoomBar } from '../ZoomBar/ZoomBar';
 
-export const BottomBar: React.FC = () => {
+interface Props {
+  changeViewTo: (view: string) => void;
+}
+
+export const BottomBar: React.FC<Props> = ({ changeViewTo }) => {
   return (
     <div className='bottom-wrapper'>
       <div className='bar-theme'>
-        <div className='button'>
+        <div className='button' onClick={() => changeViewTo('single-pano')}>
           <img src='/assets/icons/square.svg' alt='square-icon'></img>
         </div>
         <div className='button'>

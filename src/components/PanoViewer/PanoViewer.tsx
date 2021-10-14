@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import { ThreeCanvas } from '../ThreeCanvas/ThreeCanvas';
 import { useCountRenders } from '../../hooks/useCountRenders';
@@ -7,18 +7,28 @@ import { LeftBar } from '../LeftBar/LeftBar';
 import { useScene } from '../../hooks/useScene';
 import { Header } from '../Header/Header';
 import { Loader } from '../Loader/Loader';
+import FloorPlan from '../FloorPlan/FloorPlan';
+import MiniMap from '../MiniMap/MiniMap';
 
 export const PanoViewer: React.FC = () => {
   // debug info, will keep this react becomes stable
   useCountRenders('PanoViewer');
   const { scene, camera, loading } = useScene();
 
+  const [selectedViewName, setSelectedViewName] = useState('single-pano');
+
+  const selectedView = selectedViewName === 'single-pano'
+    ? <ThreeCanvas scene={scene} camera={camera} />
+    : <FloorPlan/>;
+
   if (loading) return <Loader />;
+
   return (
     <>
       <Header></Header>
-      <ThreeCanvas scene={scene} camera={camera} />
-      <LeftBar></LeftBar>
+      {selectedView}
+      <LeftBar onViewSelected={setSelectedViewName}></LeftBar>
+      <MiniMap/>
       <BottomBar></BottomBar>
     </>
   );

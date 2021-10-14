@@ -1,7 +1,7 @@
 import { CameraMouseControls } from './CameraMouseControls';
 
 export const initDefaultControls = (
-  canvas: any,
+  canvas: HTMLCanvasElement,
   camera: THREE.PerspectiveCamera
 ) => {
   new CameraMouseControls(camera, canvas);

@@ -3,14 +3,15 @@ import * as THREE from 'three';
 
 import useFetchPanoImage from './useFetchPanoImage';
 
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  1,
+  1100
+);
+
 export const useScene = () => {
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    1,
-    1100
-  );
 
   const { loading, panoImage } = useFetchPanoImage();
 

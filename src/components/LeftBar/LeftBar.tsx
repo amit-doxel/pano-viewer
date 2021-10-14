@@ -4,19 +4,19 @@ import { useFloorNavContext } from '../../context/FloorNavContext/useFloorNavCon
 import './styles.css';
 
 interface Props {
-  onViewSelected: (view: string) => void
+  onViewSelected: (view: string) => void;
 }
 
-export const LeftBar: React.FC<Props> = ({onViewSelected}) => {
+export const LeftBar: React.FC<Props> = ({ onViewSelected }) => {
   const { floorNav, setFloorNav } = useFloorNavContext();
 
   return (
     <div className='left-wrapper'>
       <div className='bar-theme'>
-        <div className='button' onClick={() => {onViewSelected('single-pano');setFloorNav(!floorNav)}}>
+        <div className='button' onClick={() => setFloorNav(!floorNav)}>
           <img src='/assets/icons/switch.svg' alt='switch-icon'></img>
         </div>
-        <div className='button'>
+        <div className='button' onClick={() => onViewSelected('single-pano')}>
           <img src='/assets/icons/floor.svg' alt='floor-icon'></img>
         </div>
         <div className='button'>

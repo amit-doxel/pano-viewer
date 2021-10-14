@@ -8,11 +8,10 @@ const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
   1,
-  1100
+  1100,
 );
 
 export const useScene = () => {
-
   const { currentScene } = useCurrentFloorSceneContext();
 
   useEffect(() => {

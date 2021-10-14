@@ -33,7 +33,7 @@ export const PanoViewer: React.FC = () => {
       <Header />
       {selectedView}
       <LeftBar onViewSelected={setSelectedViewName}></LeftBar>
-      <MiniMap/>
+      <MiniMap />
       <FloorNav />
       <BottomBar />
     </FloorNavContextProvider>

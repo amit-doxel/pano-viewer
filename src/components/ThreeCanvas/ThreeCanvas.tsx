@@ -4,7 +4,6 @@ import * as THREE from 'three';
 import { initDefaultControls } from '../Controls/DefaultControls';
 import { useCountRenders } from '../../hooks/useCountRenders';
 
-
 interface Props {
   scene: any;
   camera: THREE.PerspectiveCamera;
@@ -18,7 +17,6 @@ export const ThreeCanvas: React.FC<Props> = ({ scene, camera, onUpdate }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useLayoutEffect(() => {
-
     if (!canvasRef.current) {
       return;
     }
@@ -26,17 +24,12 @@ export const ThreeCanvas: React.FC<Props> = ({ scene, camera, onUpdate }) => {
     const canvas = canvasRef.current;
 
     const renderer = new THREE.WebGLRenderer({
-      canvas
+      canvas,
     });
 
     const disposeControls = initDefaultControls(canvas, camera);
 
-    animate(
-      renderer,
-      scene,
-      camera,
-      onUpdate
-    );
+    animate(renderer, scene, camera, onUpdate);
 
     return () => {
       disposeControls();
@@ -62,24 +55,18 @@ function resizeRenderer(renderer: THREE.WebGLRenderer) {
   );
 }
 
-
 function animate(
   renderer: THREE.WebGLRenderer,
   scene: THREE.Scene,
   camera: THREE.PerspectiveCamera,
-  onUpdate?: () => void
+  onUpdate?: () => void,
 ) {
   if (resizeRenderer(renderer)) {
     resizeRendererToDisplaySize(renderer);
     resetCameraAspectRatio(renderer, camera);
   }
   requestAnimationFrame(() => {
-    animate(
-      renderer,
-      scene,
-      camera,
-      onUpdate
-    );
+    animate(renderer, scene, camera, onUpdate);
   });
 
   if (onUpdate) onUpdate();

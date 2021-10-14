@@ -11,7 +11,7 @@ export type CurrentFloorSceneContextValue = {
 
 export const CurrentFloorSceneContext = createContext({
   currentFloor: '1',
-  currentScene: 'pano_image/second_image.jpeg',
+  currentScene: 'pano_image/second_image.jpg',
   projectId: '1',
   setCurrentFloor: (value: string) => null,
   setCurrentScene: (value: string) => null,

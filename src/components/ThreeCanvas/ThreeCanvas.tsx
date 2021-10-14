@@ -17,28 +17,20 @@ export const ThreeCanvas: React.FC<Props> = ({ scene, camera, onUpdate }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useLayoutEffect(() => {
+    if (!canvasRef.current) {
+      return;
+    }
+
+    const canvas = canvasRef.current;
+
     const renderer = new THREE.WebGLRenderer({
-      canvas: canvasRef.current as
-        | HTMLCanvasElement
-        | THREE.OffscreenCanvas
-        | undefined,
+      canvas,
     });
 
-    const disposeControls = initDefaultControls(canvasRef.current, camera);
+    const disposeControls = initDefaultControls(canvas, camera);
 
-    const animate = () => {
-      if (resizeRenderer(renderer)) {
-        resizeRendererToDisplaySize(renderer);
-        resetCameraAspectRatio(renderer, camera);
-      }
-      requestAnimationFrame(animate);
+    animate(renderer, scene, camera, onUpdate);
 
-      if (onUpdate) onUpdate();
-
-      renderer.render(scene, camera);
-    };
-
-    animate();
     return () => {
       disposeControls();
     };
@@ -61,6 +53,25 @@ function resizeRenderer(renderer: THREE.WebGLRenderer) {
   return (
     canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight
   );
+}
+
+function animate(
+  renderer: THREE.WebGLRenderer,
+  scene: THREE.Scene,
+  camera: THREE.PerspectiveCamera,
+  onUpdate?: () => void,
+) {
+  if (resizeRenderer(renderer)) {
+    resizeRendererToDisplaySize(renderer);
+    resetCameraAspectRatio(renderer, camera);
+  }
+  requestAnimationFrame(() => {
+    animate(renderer, scene, camera, onUpdate);
+  });
+
+  if (onUpdate) onUpdate();
+
+  renderer.render(scene, camera);
 }
 
 function resizeRendererToDisplaySize(renderer: THREE.WebGLRenderer) {

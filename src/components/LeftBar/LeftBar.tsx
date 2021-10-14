@@ -3,7 +3,11 @@ import React from 'react';
 import { useFloorNavContext } from '../../context/FloorNavContext/useFloorNavContext';
 import './styles.css';
 
-export const LeftBar: React.FC = () => {
+interface Props {
+  changeViewTo: (view: string) => void;
+}
+
+export const LeftBar: React.FC<Props> = ({ changeViewTo }) => {
   const { floorNav, setFloorNav } = useFloorNavContext();
 
   return (
@@ -12,7 +16,7 @@ export const LeftBar: React.FC = () => {
         <div className='button' onClick={() => setFloorNav(!floorNav)}>
           <img src='/assets/icons/switch.svg' alt='switch-icon'></img>
         </div>
-        <div className='button'>
+        <div className='button' onClick={() => changeViewTo('blueprint-view')}>
           <img src='/assets/icons/floor.svg' alt='floor-icon'></img>
         </div>
         <div className='button'>

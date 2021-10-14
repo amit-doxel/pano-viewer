@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import FloorPlan from '../FloorPlan/FloorPlan';
-import MiniMap from '../MiniMap/MiniMap';
+import { FloorPlan } from '../FloorPlan';
+import { MiniMap } from '../MiniMap';
 
 import { ThreeCanvas } from '../ThreeCanvas';
 import { BottomBar } from '../BottomBar';

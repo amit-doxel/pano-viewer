@@ -1,6 +1,6 @@
 import BluePrint from '../BluePrint/BluePrint';
 
-const FloorPlan: React.FC = () => {
+export const FloorPlan: React.FC = () => {
   return (
     <div
       style={{
@@ -19,5 +19,3 @@ const FloorPlan: React.FC = () => {
     </div>
   );
 };
-
-export default FloorPlan;

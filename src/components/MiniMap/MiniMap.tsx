@@ -1,6 +1,6 @@
 import BluePrint from '../BluePrint/BluePrint';
 
-const MiniMap: React.FC = () => {
+export const MiniMap: React.FC = () => {
   return (
     <div
       style={{
@@ -17,5 +17,3 @@ const MiniMap: React.FC = () => {
     </div>
   );
 };
-
-export default MiniMap;

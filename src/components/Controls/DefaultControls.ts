@@ -2,7 +2,7 @@ import { CameraMouseControls } from './CameraMouseControls';
 
 export const initDefaultControls = (
   canvas: any,
-  camera: THREE.PerspectiveCamera
+  camera: THREE.PerspectiveCamera,
 ) => {
   new CameraMouseControls(camera, canvas);
 
@@ -47,7 +47,7 @@ export const initDefaultControls = (
       (2 *
         Math.atan(camera.getFilmHeight() / 2 / camera.getFocalLength()) *
         180) /
-        Math.PI
+        Math.PI,
     );
   };
 

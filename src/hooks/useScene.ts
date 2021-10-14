@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import * as THREE from 'three';
 
-import useFetchPanoImage from './useFetchPanoImage';
+import { useCurrentFloorSceneContext } from '../context/CurrentFloorSceneContext/useCurrentFloorSceneContext';
 
 export const useScene = () => {
   const scene = new THREE.Scene();
@@ -9,27 +9,26 @@ export const useScene = () => {
     75,
     window.innerWidth / window.innerHeight,
     1,
-    1100
+    1100,
   );
 
-  const { loading, panoImage } = useFetchPanoImage();
+  const { currentScene } = useCurrentFloorSceneContext();
 
   useEffect(() => {
     camera.rotation.y = Math.PI;
     camera.rotation.z = Math.PI;
 
     const sphere = createSphereMesh(
-      'https://threejs.org/examples/textures/2294472375_24a3b8ef46_o.jpg'
+      currentScene,
       // will remove this link and add panoImage when the real API integration will be done
     );
 
     scene.add(sphere);
-  }, [loading, panoImage]);
+  }, [currentScene]);
 
   return {
     scene: scene,
     camera: camera,
-    loading: loading,
   };
 };
 

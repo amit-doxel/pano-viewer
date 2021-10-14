@@ -14,7 +14,7 @@ function useFetchPanoImage() {
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }, []);
 

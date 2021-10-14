@@ -1,25 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-import { ThreeCanvas } from '../ThreeCanvas/ThreeCanvas';
-import { useCountRenders } from '../../hooks/useCountRenders';
-import { BottomBar } from '../BottomBar/BottomBar';
-import { LeftBar } from '../LeftBar/LeftBar';
-import { useScene } from '../../hooks/useScene';
-import { Header } from '../Header/Header';
-import { Loader } from '../Loader/Loader';
+import { ThreeCanvas } from '../ThreeCanvas';
+import { BottomBar } from '../BottomBar';
+import { LeftBar } from '../LeftBar';
+import { Header } from '../Header';
+import { Loader } from '../Loader';
+import { FloorNav } from '../FloorNav';
+
+import { useScene, useCountRenders } from '../../hooks';
+import { FloorNavContextProvider } from '../../context/FloorNavContext/FloorNavContextProvider';
+import { useCurrentFloorSceneContext } from '../../context/CurrentFloorSceneContext/useCurrentFloorSceneContext';
 
 export const PanoViewer: React.FC = () => {
   // debug info, will keep this react becomes stable
   useCountRenders('PanoViewer');
-  const { scene, camera, loading } = useScene();
-
-  if (loading) return <Loader />;
+  const { scene, camera } = useScene();
   return (
-    <>
-      <Header></Header>
+    <FloorNavContextProvider>
+      <Header />
       <ThreeCanvas scene={scene} camera={camera} />
-      <LeftBar></LeftBar>
-      <BottomBar></BottomBar>
-    </>
+      <LeftBar />
+      <FloorNav />
+      <BottomBar />
+    </FloorNavContextProvider>
   );
 };

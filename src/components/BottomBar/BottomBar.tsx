@@ -6,7 +6,7 @@ import { ZoomBar } from '../ZoomBar/ZoomBar';
 export const BottomBar: React.FC = () => {
   return (
     <div className='bottom-wrapper'>
-      <div className='bottom-bar'>
+      <div className='bar-theme'>
         <div className='button'>
           <img src='/assets/icons/square.svg' alt='square-icon'></img>
         </div>

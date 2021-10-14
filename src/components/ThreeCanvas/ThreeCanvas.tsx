@@ -70,7 +70,7 @@ function resizeRendererToDisplaySize(renderer: THREE.WebGLRenderer) {
 
 function resetCameraAspectRatio(
   renderer: THREE.WebGLRenderer,
-  camera: THREE.PerspectiveCamera
+  camera: THREE.PerspectiveCamera,
 ) {
   const canvas = renderer.domElement;
   camera.aspect = canvas.clientWidth / canvas.clientHeight;

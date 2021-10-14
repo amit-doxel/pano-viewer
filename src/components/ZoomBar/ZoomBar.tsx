@@ -5,7 +5,7 @@ import './styles.css';
 export const ZoomBar: React.FC = () => {
   return (
     <div className='zoom-wrapper'>
-      <div className='bottom-bar zoom-bar'>
+      <div className='bar-theme zoom-bar'>
         <div className='button' id='zoom-out'>
           <img src='assets/icons/minus.svg' alt='zoom-out-icon' />
         </div>

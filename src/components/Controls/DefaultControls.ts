@@ -47,7 +47,7 @@ export const initDefaultControls = (
       (2 *
         Math.atan(camera.getFilmHeight() / 2 / camera.getFocalLength()) *
         180) /
-        Math.PI
+        Math.PI,
     );
   };
 

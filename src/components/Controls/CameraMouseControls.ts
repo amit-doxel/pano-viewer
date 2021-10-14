@@ -57,7 +57,7 @@ export class CameraMouseControls {
 
     // Yaw, and then pitch
     this._camera.quaternion.setFromEuler(
-      new THREE.Euler(0, -this._rpy.z, 0, 'XYZ')
+      new THREE.Euler(0, -this._rpy.z, 0, 'XYZ'),
     );
 
     let newPitch = Math.PI + this._rpy.y;
@@ -75,7 +75,7 @@ export class CameraMouseControls {
     // expose the rotation vector for convenience
     this._camera.rotation.setFromQuaternion(
       this._camera.quaternion,
-      this._camera.rotation.order
+      this._camera.rotation.order,
     );
   }
 

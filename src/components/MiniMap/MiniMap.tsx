@@ -1,4 +1,4 @@
-import BluePrint from '../BluePrint/BluePrint';
+import BluePrint, {DEFAULT_MARKERS} from '../BluePrint/BluePrint';
 
 export const MiniMap: React.FC = () => {
   return (
@@ -13,7 +13,10 @@ export const MiniMap: React.FC = () => {
         borderRadius: 2,
       }}
     >
-      <BluePrint />
+    <BluePrint
+      markers={DEFAULT_MARKERS}
+      bgImageUrl={''}
+    />
     </div>
   );
 };

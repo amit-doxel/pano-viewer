@@ -1,6 +1,10 @@
-import BluePrint from '../BluePrint/BluePrint';
+import {useState} from 'react';
+import BluePrint, {DEFAULT_MARKERS} from '../BluePrint/BluePrint';
 
 export const FloorPlan: React.FC = () => {
+
+  const [count, setCount] = useState(0);
+
   return (
     <div
       style={{
@@ -10,11 +14,16 @@ export const FloorPlan: React.FC = () => {
         justifyContent: 'center',
         alignItems: 'center',
       }}
+      onClick={() => setCount(count + 1)}
     >
       <div
         style={{ width: '90%', height: '80%', backgroundColor: 'lightgrey' }}
       >
-        <BluePrint />
+      <BluePrint
+        markers={DEFAULT_MARKERS}
+        selectedMarker={DEFAULT_MARKERS[count]}
+        bgImageUrl={''}
+      />
       </div>
     </div>
   );

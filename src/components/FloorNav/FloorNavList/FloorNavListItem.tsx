@@ -14,12 +14,12 @@ export const FloorNavListItem: React.FC<FloorDataType> = (floor) => {
 
   const changeFloorAndScene = (floor_name: string) => {
     setCurrentFloor(floor_name);
+    setFloorNav(!floorNav);
     if (currentScene === 'pano_image/first_image.jpeg') {
       setCurrentScene('pano_image/second_image.jpg');
     } else {
       setCurrentScene('pano_image/first_image.jpeg');
     }
-    setFloorNav(!floorNav);
   };
 
   return (

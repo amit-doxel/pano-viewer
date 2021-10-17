@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { FloorPlan } from '../FloorPlan';
 import { MiniMap } from '../MiniMap';
@@ -11,16 +11,16 @@ import { FloorNav } from '../FloorNav';
 
 import { useScene, useCountRenders } from '../../hooks';
 import { FloorNavContextProvider } from '../../context/FloorNavContext/FloorNavContextProvider';
+import { useViewContext } from '../../context/ViewContext/useViewContext';
 
 export const PanoViewer: React.FC = () => {
   // debug info, will keep this react becomes stable
   useCountRenders('PanoViewer');
   const { scene, camera } = useScene();
-
-  const [selectedViewName, setSelectedViewName] = useState('single-pano');
+  const { view } = useViewContext();
 
   const selectedView =
-    selectedViewName === 'single-pano' ? (
+    view === 'single-pano' ? (
       <ThreeCanvas scene={scene} camera={camera} />
     ) : (
       <FloorPlan />
@@ -30,10 +30,10 @@ export const PanoViewer: React.FC = () => {
     <FloorNavContextProvider>
       <Header />
       {selectedView}
-      <LeftBar changeViewTo={setSelectedViewName}></LeftBar>
+      <LeftBar />
       <MiniMap />
       <FloorNav />
-      <BottomBar changeViewTo={setSelectedViewName} />
+      <BottomBar />
     </FloorNavContextProvider>
   );
 };

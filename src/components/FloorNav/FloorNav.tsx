@@ -6,15 +6,15 @@ import './styles.css';
 
 export const FloorNav: React.FC = () => {
   const { floorNav } = useFloorNavContext();
-  if (floorNav) {
-    return (
-      <div className='floor-nav-wrapper'>
-        <div className='bar-theme floor-nav'>
-          <FloorNavList />
+  return (
+    <>
+      {floorNav && (
+        <div className='floor-nav-wrapper'>
+          <div className='bar-theme floor-nav'>
+            <FloorNavList />
+          </div>
         </div>
-      </div>
-    );
-  } else {
-    return null;
-  }
+      )}
+    </>
+  );
 };

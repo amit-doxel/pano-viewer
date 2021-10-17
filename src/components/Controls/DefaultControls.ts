@@ -16,7 +16,7 @@ export const initDefaultControls = (
   const zoomInButton = document.getElementById('zoom-in');
   const zoomOutButton = document.getElementById('zoom-out');
 
-  const zoomInFunction = (e: any) => {
+  const zoomInFunction = (e: MouseEvent) => {
     const fov = getFov();
     camera.fov = clickZoom(fov, 'zoomIn');
     camera.updateProjectionMatrix();
@@ -24,7 +24,7 @@ export const initDefaultControls = (
 
   zoomInButton?.addEventListener('click', zoomInFunction);
 
-  const zoomOutFunction = (e: any) => {
+  const zoomOutFunction = (e: MouseEvent) => {
     const fov = getFov();
     camera.fov = clickZoom(fov, 'zoomOut');
     camera.updateProjectionMatrix();

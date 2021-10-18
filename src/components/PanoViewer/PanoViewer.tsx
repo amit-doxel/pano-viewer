@@ -12,12 +12,16 @@ import { FloorNav } from '../FloorNav';
 import { useScene, useCountRenders } from '../../hooks';
 import { FloorNavContextProvider } from '../../context/FloorNavContext/FloorNavContextProvider';
 import { useViewContext } from '../../context/ViewContext/useViewContext';
+import { useIdentity } from '../../hooks/useIdentity';
 
 export const PanoViewer: React.FC = () => {
   // debug info, will keep this react becomes stable
   useCountRenders('PanoViewer');
+  const { user } = useIdentity();
   const { scene, camera } = useScene();
   const { view } = useViewContext();
+
+  if (!user) return null;
 
   const selectedView =
     view === 'single-pano' ? (

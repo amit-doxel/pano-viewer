@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import * as THREE from 'three';
 
-import { useCurrentFloorSceneContext } from '../context/CurrentFloorSceneContext/useCurrentFloorSceneContext';
+import { usePanoramaContext } from '../context/PanoramaContext/usePanoramaContext';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -12,7 +12,7 @@ const camera = new THREE.PerspectiveCamera(
 );
 
 export const useScene = () => {
-  const { currentScene } = useCurrentFloorSceneContext();
+  const { currentScene } = usePanoramaContext();
 
   useEffect(() => {
     camera.rotation.y = Math.PI;

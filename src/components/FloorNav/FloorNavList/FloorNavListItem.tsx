@@ -1,14 +1,14 @@
 import React from 'react';
 
 import { FloorDataType } from '../../../hooks';
-import { useCurrentFloorSceneContext } from '../../../context/CurrentFloorSceneContext/useCurrentFloorSceneContext';
+import { usePanoramaContext } from '../../../context/PanoramaContext/usePanoramaContext';
 import { useFloorNavContext } from '../../../context/FloorNavContext/useFloorNavContext';
 
 import './styles.css';
 
 export const FloorNavListItem: React.FC<FloorDataType> = (floor) => {
   const { currentScene, setCurrentFloor, setCurrentScene } =
-    useCurrentFloorSceneContext();
+    usePanoramaContext();
 
   const { floorNav, setFloorNav } = useFloorNavContext();
 
@@ -16,7 +16,7 @@ export const FloorNavListItem: React.FC<FloorDataType> = (floor) => {
     setCurrentFloor(floor_name);
     setFloorNav(!floorNav);
     if (currentScene === 'pano_image/first_image.jpeg') {
-      setCurrentScene('pano_image/second_image.jpg');
+      setCurrentScene('pano_image/second_image.jpeg');
     } else {
       setCurrentScene('pano_image/first_image.jpeg');
     }

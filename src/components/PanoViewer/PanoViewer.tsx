@@ -8,6 +8,7 @@ import { BottomBar } from '../BottomBar';
 import { LeftBar } from '../LeftBar';
 import { Header } from '../Header';
 import { FloorNav } from '../FloorNav';
+import { Arrow } from '../Arrow';
 
 import { useScene, useCountRenders } from '../../hooks';
 import { FloorNavContextProvider } from '../../context/FloorNavContext/FloorNavContextProvider';
@@ -21,7 +22,7 @@ export const PanoViewer: React.FC = () => {
   const { scene, camera } = useScene();
   const { view } = useViewContext();
 
-  if (!user) return null;
+  // if (!user) return null;
 
   const selectedView =
     view === 'single-pano' ? (
@@ -35,6 +36,8 @@ export const PanoViewer: React.FC = () => {
       <Header />
       {selectedView}
       <LeftBar />
+      <Arrow url='/assets/icons/left-arrow.svg' leftPos='-10px' />
+      <Arrow url='/assets/icons/right-arrow.svg' leftPos='95vw' />
       <MiniMap />
       <FloorNav />
       <BottomBar />

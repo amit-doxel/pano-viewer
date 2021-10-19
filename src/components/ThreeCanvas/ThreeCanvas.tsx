@@ -28,7 +28,7 @@ export const ThreeCanvas: React.FC<Props> = ({ scene, camera, onUpdate }) => {
     });
 
     const disposeControls = initDefaultControls(canvas, camera);
-
+    renderer.setPixelRatio(window.devicePixelRatio);
     animate(renderer, scene, camera, onUpdate);
 
     return () => {

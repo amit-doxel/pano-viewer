@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-export type CurrentFloorSceneContextValue = {
+export type PanoramaContextValue = {
   currentFloor: string;
   currentScene: string;
   projectId: string;
@@ -9,7 +9,7 @@ export type CurrentFloorSceneContextValue = {
   setProjectId: (value: string) => any;
 };
 
-export const CurrentFloorSceneContext = createContext({
+export const PanoramaContext = createContext({
   currentFloor: '1',
   currentScene: 'pano_image/second_image.jpg',
   projectId: '1',

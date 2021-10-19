@@ -23,7 +23,7 @@ export const Arrow: React.FC<ArrowProp> = ({ leftPos, url }) => {
       style={{
         position: 'fixed',
         left: `${leftPos}`,
-        top: '53%',
+        top: '55%',
         textAlign: 'center',
       }}
     >

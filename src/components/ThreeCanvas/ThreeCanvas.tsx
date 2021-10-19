@@ -5,7 +5,7 @@ import { initDefaultControls } from '../Controls/DefaultControls';
 import { useCountRenders } from '../../hooks/useCountRenders';
 
 interface Props {
-  scene: any;
+  scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
   onUpdate?: () => void;
 }

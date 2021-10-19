@@ -1,17 +1,15 @@
 import React from 'react';
+import { useViewContext } from '../../context/ViewContext/useViewContext';
 
 import { ZoomBar } from '../ZoomBar';
 import './styles.css';
 
-interface Props {
-  changeViewTo: (view: string) => void;
-}
-
-export const BottomBar: React.FC<Props> = ({ changeViewTo }) => {
+export const BottomBar: React.FC = () => {
+  const { setView } = useViewContext();
   return (
     <div className='bottom-wrapper'>
       <div className='bar-theme'>
-        <div className='button' onClick={() => changeViewTo('single-pano')}>
+        <div className='button' onClick={() => setView('single-pano')}>
           <img src='/assets/icons/square.svg' alt='square-icon'></img>
         </div>
         <div className='button'>

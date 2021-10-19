@@ -13,7 +13,6 @@ import { useScene, useCountRenders } from '../../hooks';
 import { FloorNavContextProvider } from '../../context/FloorNavContext/FloorNavContextProvider';
 //import { useCurrentFloorSceneContext } from '../../context/CurrentFloorSceneContext/useCurrentFloorSceneContext';
 
-
 // NOTES:
 // 1. Should have a PanoVisContainer component that can hold
 // either PanoContainer or BluePrintContainer maped to diff routes

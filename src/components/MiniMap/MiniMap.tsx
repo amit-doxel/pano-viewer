@@ -1,8 +1,8 @@
-import {useState} from 'react';
-import Blueprint, {DEFAULT_MARKERS, IMG_URL} from '../Blueprint/Blueprint';
+import { useState } from 'react';
+import Blueprint from '../Blueprint/Blueprint';
+import {DEFAULT_MARKERS, IMG_URL} from '../Blueprint/constants';
 
 export const MiniMap: React.FC = () => {
-
   const [count, setCount] = useState(0);
 
   return (
@@ -18,13 +18,13 @@ export const MiniMap: React.FC = () => {
       }}
       onClick={() => setCount(count + 1)}
     >
-    <Blueprint
-      markers={DEFAULT_MARKERS}
-      selectedMarker={DEFAULT_MARKERS[count]}
-      enableSelectZoomPan={true}
-      bgImageUrl={IMG_URL}
-      selectionType={'pin'}
-    />
+      <Blueprint
+        markers={DEFAULT_MARKERS}
+        selectedMarker={DEFAULT_MARKERS[count]}
+        enableSelectZoomPan={true}
+        bgImageUrl={IMG_URL}
+        selectionType={'pin'}
+      />
     </div>
   );
 };

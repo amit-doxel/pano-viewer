@@ -11,30 +11,30 @@ export interface PanoMarker {
 export interface BlueprintProps {
   bgImageUrl: string;
   markers: PanoMarker[];
-  selectedMarker ?: PanoMarker;
+  selectedMarker?: PanoMarker;
 
-  selectionType ?: SelectionType;
+  selectionType?: SelectionType;
 
-  enableSelectZoomPan ?: boolean;
+  enableSelectZoomPan?: boolean;
 
-  onMarkerSelected ?: (marker: PanoMarker) => void;
-  onZoomChanged ?: (zoom: number) => void;
+  onMarkerSelected?: (marker: PanoMarker) => void;
+  onZoomChanged?: (zoom: number) => void;
 }
 
 export type UseBlueprintProps = BlueprintProps & {
   wrapperRef: RefObject<HTMLDivElement>;
   canvasRef: RefObject<HTMLCanvasElement>;
-}
+};
 
 export interface BlueprintRenderOpts {
-  imgScaleFactor ?: number;
-  topImgOffset ?: number;
-  leftImgOffset ?: number;
-  selectionType ?: SelectionType;
+  imgScaleFactor?: number;
+  topImgOffset?: number;
+  leftImgOffset?: number;
+  selectionType?: SelectionType;
 
-  circleColor ?: string;
-  circleRadius ?: number;
+  circleColor?: string;
+  circleRadius?: number;
 
-  onMarkerSelected ?: (marker: PanoMarker) => void;
-  onZoomChanged ?: (zoom: number) => void;
+  onMarkerSelected?: (marker: PanoMarker) => void;
+  onZoomChanged?: (zoom: number) => void;
 }

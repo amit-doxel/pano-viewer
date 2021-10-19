@@ -22,7 +22,7 @@ export const PanoViewer: React.FC = () => {
   const { scene, camera } = useScene();
   const { view } = useViewContext();
 
-  // if (!user) return null;
+  if (!user) return null;
 
   const selectedView =
     view === 'single-pano' ? (

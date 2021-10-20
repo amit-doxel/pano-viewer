@@ -24,8 +24,6 @@ export const PanoViewer: React.FC = () => {
 
   const blueprintUrl = useFetchBlueprint(20, '2021-10-14');
 
-  console.log('blueprintUrl', blueprintUrl);
-
   if (!user) return null;
 
   const selectedView =

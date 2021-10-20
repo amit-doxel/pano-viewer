@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
 
-import {
-  CurrentFloorSceneContextValue,
-  CurrentFloorSceneContext,
-} from './CurrentFloorSceneContext';
+import { PanoramaContextValue, PanoramaContext } from './PanoramaContext';
 
-export const CurrentFloorSceneContextProvider: React.FC = ({ children }) => {
+export const PanoramaContextProvider: React.FC = ({ children }) => {
   const [currentFloor, setCurrentFloor] = useState('1');
   const [currentScene, setCurrentScene] = useState(
     'pano_image/second_image.jpg',
   );
   const [projectId, setProjectId] = useState('1');
 
-  const context: CurrentFloorSceneContextValue = {
+  const context: PanoramaContextValue = {
     currentFloor: currentFloor,
     currentScene: currentScene,
     projectId: projectId,
@@ -22,8 +19,8 @@ export const CurrentFloorSceneContextProvider: React.FC = ({ children }) => {
   };
 
   return (
-    <CurrentFloorSceneContext.Provider value={context}>
+    <PanoramaContext.Provider value={context}>
       {children}
-    </CurrentFloorSceneContext.Provider>
+    </PanoramaContext.Provider>
   );
 };

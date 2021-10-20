@@ -1,17 +1,17 @@
 import React from 'react';
 
 import { PanoViewer } from './components/PanoViewer/PanoViewer';
-import { CurrentFloorSceneContextProvider } from './context/CurrentFloorSceneContext/CurrentFloorSceneContextProvider';
+import { PanoramaContextProvider } from './context/PanoramaContext/PanoramaContextProvider';
 import { ViewContextProvider } from './context/ViewContext/ViewContextProvider';
 
 function App() {
   return (
     <div>
-      <CurrentFloorSceneContextProvider>
+      <PanoramaContextProvider>
         <ViewContextProvider>
-          <PanoViewer></PanoViewer>
+          <PanoViewer />
         </ViewContextProvider>
-      </CurrentFloorSceneContextProvider>
+      </PanoramaContextProvider>
     </div>
   );
 }

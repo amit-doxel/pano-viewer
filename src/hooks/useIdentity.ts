@@ -23,7 +23,7 @@ export function useIdentity() {
     try {
       const response = await fetch('http://localhost:3000/api/v2/users/1', {
         method: 'GET',
-        credentials: 'include'
+        credentials: 'include',
       });
       const currentUser = await response.json();
       setUser(currentUser);

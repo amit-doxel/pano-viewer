@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
 import { FloorPlan } from '../FloorPlan';
 import { MiniMap } from '../MiniMap';
@@ -22,10 +22,7 @@ export const PanoViewer: React.FC = () => {
   const { scene, camera } = useScene();
   const { view } = useViewContext();
 
-  const blueprintUrl = useFetchBlueprint(
-    20,
-    '2021-10-14'
-  );
+  const blueprintUrl = useFetchBlueprint(20, '2021-10-14');
 
   console.log('blueprintUrl', blueprintUrl);
 

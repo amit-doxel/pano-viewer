@@ -1,9 +1,19 @@
 .left-wrapper {
   position: fixed;
-  left: 25px;
+  left: 2em;
   top: 25%;
   text-align: center;
   z-index: 5;
   transform: translateX(-50%);
   pointer-events: none;
+}
+
+.left-wrapper .bar-theme {
+  border-radius: 5px;
+}
+
+@media only screen and (max-height: 928px) {
+  .left-wrapper {
+    top: 10%;
+  }
 }

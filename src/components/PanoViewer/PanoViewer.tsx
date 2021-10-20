@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { FloorPlan } from '../FloorPlan';
 import { MiniMap } from '../MiniMap';
@@ -10,12 +10,14 @@ import { Header } from '../Header';
 import { FloorNav } from '../FloorNav';
 import { Arrow } from '../Arrow';
 
-import { useScene, useCountRenders } from '../../hooks';
-import { FloorNavContextProvider } from '../../context/FloorNavContext/FloorNavContextProvider';
+import { zoomInFunction, zoomOutFunction } from '../../utils/zoom';
 
-import { useViewContext } from '../../context/ViewContext/useViewContext';
+import { useScene, useCountRenders } from '../../hooks';
 import { useIdentity } from '../../hooks/useIdentity';
 import { useFetchBlueprint } from '../../hooks/useFetchBlueprint';
+
+import { FloorNavContextProvider } from '../../context/FloorNavContext/FloorNavContextProvider';
+import { useViewContext } from '../../context/ViewContext/useViewContext';
 
 // NOTES:
 // 1. Should have a PanoVisContainer component that can hold
@@ -38,8 +40,7 @@ export const PanoViewer: React.FC = () => {
     view === 'single-pano' ? (
       <>
         <ThreeCanvas scene={scene} camera={camera} />
-        <Arrow url='/assets/icons/left-arrow.svg' style={{ left: '-10px' }} />
-        <Arrow url='/assets/icons/right-arrow.svg' style={{ right: '-10px' }} />
+        <Arrow />
       </>
     ) : (
       <FloorPlan />
@@ -52,7 +53,7 @@ export const PanoViewer: React.FC = () => {
       <LeftBar />
       <MiniMap />
       <FloorNav />
-      <BottomBar />
+      <BottomBar zoomIn={zoomInFunction} zoomOut={zoomOutFunction} />
     </FloorNavContextProvider>
   );
 };

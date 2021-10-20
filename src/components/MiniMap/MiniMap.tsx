@@ -1,23 +1,14 @@
 import { useState } from 'react';
+
 import Blueprint from '../Blueprint/Blueprint';
-import {DEFAULT_MARKERS, IMG_URL} from '../Blueprint/constants';
+import { DEFAULT_MARKERS, IMG_URL } from '../Blueprint/constants';
+import './styles.css';
 
 export const MiniMap: React.FC = () => {
   const [count, setCount] = useState(0);
 
   return (
-    <div
-      style={{
-        position: 'absolute',
-        left: '10px',
-        bottom: '10px',
-        width: '180px',
-        height: '180px',
-        backgroundColor: 'lightblue',
-        borderRadius: 2,
-      }}
-      onClick={() => setCount(count + 1)}
-    >
+    <div className='mini-map' onClick={() => setCount(count + 1)}>
       <Blueprint
         markers={DEFAULT_MARKERS}
         selectedMarker={DEFAULT_MARKERS[count]}

@@ -36,7 +36,11 @@ export const PanoViewer: React.FC = () => {
 
   const selectedView =
     view === 'single-pano' ? (
-      <ThreeCanvas scene={scene} camera={camera} />
+      <>
+        <ThreeCanvas scene={scene} camera={camera} />
+        <Arrow url='/assets/icons/left-arrow.svg' style={{ left: '-10px' }} />
+        <Arrow url='/assets/icons/right-arrow.svg' style={{ right: '-10px' }} />
+      </>
     ) : (
       <FloorPlan />
     );
@@ -46,8 +50,6 @@ export const PanoViewer: React.FC = () => {
       <Header />
       {selectedView}
       <LeftBar />
-      <Arrow url='/assets/icons/left-arrow.svg' leftPos='-10px' />
-      <Arrow url='/assets/icons/right-arrow.svg' leftPos='95vw' />
       <MiniMap />
       <FloorNav />
       <BottomBar />

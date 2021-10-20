@@ -3,11 +3,11 @@ import { usePanoramaContext } from '../../context/PanoramaContext/usePanoramaCon
 import './styles.css';
 
 export interface ArrowProp {
-  leftPos: string;
+  style: object;
   url: string;
 }
 
-export const Arrow: React.FC<ArrowProp> = ({ leftPos, url }) => {
+export const Arrow: React.FC<ArrowProp> = ({ style, url }) => {
   const { currentScene, setCurrentScene } = usePanoramaContext();
 
   const changeFloorAndScene = () => {
@@ -22,9 +22,8 @@ export const Arrow: React.FC<ArrowProp> = ({ leftPos, url }) => {
     <div
       style={{
         position: 'fixed',
-        left: `${leftPos}`,
         top: '55%',
-        textAlign: 'center',
+        ...style,
       }}
     >
       <div className='arrow-theme' onClick={() => changeFloorAndScene()}>

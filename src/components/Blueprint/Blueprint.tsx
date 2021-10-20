@@ -1,6 +1,8 @@
 import { useRef, RefObject } from 'react';
+
 import useBlueprint from './useBlueprint';
 import { BlueprintProps } from './models';
+import './styles.css';
 
 const Blueprint: React.FC<BlueprintProps> = (props) => {
   const wrapperRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
@@ -14,16 +16,7 @@ const Blueprint: React.FC<BlueprintProps> = (props) => {
   });
 
   return (
-    <div
-      ref={wrapperRef}
-      style={{
-        display: 'block',
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'lightblue',
-        borderRadius: 2,
-      }}
-    >
+    <div ref={wrapperRef} className='blueprint-wrapper'>
       <canvas ref={canvasRef}></canvas>
     </div>
   );

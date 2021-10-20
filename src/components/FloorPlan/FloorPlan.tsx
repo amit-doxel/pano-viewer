@@ -1,6 +1,7 @@
 import { useState } from 'react';
+
 import Blueprint from '../Blueprint/Blueprint';
-import {DEFAULT_MARKERS, IMG_URL} from '../Blueprint/constants';
+import { DEFAULT_MARKERS, IMG_URL } from '../Blueprint/constants';
 
 export const FloorPlan: React.FC = () => {
   const [count] = useState(0);

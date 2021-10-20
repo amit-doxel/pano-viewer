@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fabric } from 'fabric';
+
 import { UseBlueprintProps, BlueprintRenderOpts, PanoMarker } from './models';
 import {
   MOUSE_DOWN_EVENT,
@@ -64,10 +65,10 @@ const useBlueprint = (props: UseBlueprintProps): void => {
     fabric.Image.fromURL(
       bgImageUrl,
       function (img$: fabric.Image) {
-        const isImgFatched =
+        const isImageFetched =
           img$.get('width') !== 0 && img$.get('height') !== 0;
 
-        if (!isImgFatched) {
+        if (!isImageFetched) {
           console.error(
             'Image.fromURL: Could not fetch blueprint image. Check network tab',
           );

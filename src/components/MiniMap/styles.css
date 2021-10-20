@@ -1,0 +1,9 @@
+.mini-map {
+  position: fixed;
+  left: 8px;
+  bottom: 8px;
+  width: 180px;
+  height: 180px;
+  background-color: lightblue;
+  border-radius: 2;
+}

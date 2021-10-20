@@ -1,6 +1,5 @@
 import React /*, { useCallback }*/ from 'react';
 
-
 import { FloorDataType } from '../../../hooks';
 import { usePanoramaContext } from '../../../context/PanoramaContext/usePanoramaContext';
 import { useFloorNavContext } from '../../../context/FloorNavContext/useFloorNavContext';

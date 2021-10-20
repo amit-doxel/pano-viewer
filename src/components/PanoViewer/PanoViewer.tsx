@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { FloorPlan } from '../FloorPlan';
 import { MiniMap } from '../MiniMap';
@@ -14,6 +14,7 @@ import { FloorNavContextProvider } from '../../context/FloorNavContext/FloorNavC
 
 import { useViewContext } from '../../context/ViewContext/useViewContext';
 import { useIdentity } from '../../hooks/useIdentity';
+import { useFetchBlueprint } from '../../hooks/useFetchBlueprint';
 
 // NOTES:
 // 1. Should have a PanoVisContainer component that can hold
@@ -27,6 +28,8 @@ export const PanoViewer: React.FC = () => {
   const { user } = useIdentity();
   const { scene, camera } = useScene();
   const { view } = useViewContext();
+
+  const blueprintUrl = useFetchBlueprint(20, '2021-10-14');
 
   if (!user) return null;
 

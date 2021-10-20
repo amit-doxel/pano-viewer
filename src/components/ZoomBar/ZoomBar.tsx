@@ -10,7 +10,7 @@ export const ZoomBar: React.FC = () => {
           <img src='assets/icons/minus.svg' alt='zoom-out-icon' />
         </div>
         <div className='button' id='zoom-in'>
-          <img src='/assets/icons/Add.svg' alt='zoom-in-icon'></img>
+          <img src='/assets/icons/add.svg' alt='zoom-in-icon'></img>
         </div>
       </div>
     </div>

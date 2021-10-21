@@ -10,8 +10,6 @@ import { Header } from '../Header';
 import { FloorNav } from '../FloorNav';
 import { Arrow } from '../Arrow';
 
-import { zoomInFunction, zoomOutFunction } from '../../utils/zoom';
-
 import { useScene, useCountRenders } from '../../hooks';
 import { useIdentity } from '../../hooks/useIdentity';
 import { useFetchBlueprint } from '../../hooks/useFetchBlueprint';
@@ -30,11 +28,12 @@ export const PanoViewer: React.FC = () => {
   useCountRenders('PanoViewer');
   const { user } = useIdentity();
   const { scene, camera } = useScene();
-  const { view } = useViewContext();
+  const { view, zoomMethods } = useViewContext();
+  const { zoomInMethod, zoomOutMethod } = zoomMethods;
 
   const blueprintUrl = useFetchBlueprint(20, '2021-10-14');
 
-  if (!user) return null;
+  //if (!user) return null;
 
   const selectedView =
     view === 'single-pano' ? (
@@ -53,7 +52,7 @@ export const PanoViewer: React.FC = () => {
       <LeftBar />
       <MiniMap />
       <FloorNav />
-      <BottomBar zoomIn={zoomInFunction} zoomOut={zoomOutFunction} />
+      <BottomBar zoomIn={zoomInMethod} zoomOut={zoomOutMethod} />
     </FloorNavContextProvider>
   );
 };

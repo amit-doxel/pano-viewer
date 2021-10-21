@@ -2,12 +2,7 @@ import React from 'react';
 import { usePanoramaContext } from '../../context/PanoramaContext/usePanoramaContext';
 import './styles.css';
 
-export interface ArrowProp {
-  style: object;
-  url: string;
-}
-
-export const Arrow: React.FC<ArrowProp> = ({ style, url }) => {
+export const Arrow: React.FC = () => {
   const { currentScene, setCurrentScene } = usePanoramaContext();
 
   const changeFloorAndScene = () => {
@@ -19,15 +14,14 @@ export const Arrow: React.FC<ArrowProp> = ({ style, url }) => {
   };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: '55%',
-        ...style,
-      }}
-    >
-      <div className='arrow-theme' onClick={() => changeFloorAndScene()}>
-        <img src={url} alt='arrow-icon'></img>
+    <div className='arrow-wrapper'>
+      <div className='arrow-theme'>
+        <div onClick={() => changeFloorAndScene()}>
+          <img src='/assets/icons/left-arrow.svg' alt='arrow-icon'></img>
+        </div>
+        <div onClick={() => changeFloorAndScene()}>
+          <img src='/assets/icons/right-arrow.svg' alt='arrow-icon'></img>
+        </div>
       </div>
     </div>
   );

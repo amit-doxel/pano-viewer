@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
 import { FloorPlan } from '../FloorPlan';
 import { MiniMap } from '../MiniMap';
@@ -12,10 +12,14 @@ import { Arrow } from '../Arrow';
 
 import { useScene, useCountRenders } from '../../hooks';
 import { useIdentity } from '../../hooks/useIdentity';
-import { useFetchBlueprint } from '../../hooks/useFetchBlueprint';
+import { useFetchBlueprintFabricImage } from '../../hooks/useFetchBlueprintImage';
 
 import { FloorNavContextProvider } from '../../context/FloorNavContext/FloorNavContextProvider';
 import { useViewContext } from '../../context/ViewContext/useViewContext';
+
+import { DEFAULT_MARKERS, PanoMarker, PointZoom } from '../Blueprint';
+
+const FLOORPLAN_ZOOM_MIN_MAX = [1, 20];
 
 // NOTES:
 // 1. Should have a PanoVisContainer component that can hold
@@ -31,7 +35,36 @@ export const PanoViewer: React.FC = () => {
   const { view, zoomMethods } = useViewContext();
   const { zoomInMethod, zoomOutMethod } = zoomMethods;
 
-  const blueprintUrl = useFetchBlueprint(20, '2021-10-14');
+  const [ selectedMarker, setSelectedMarker ] = useState<PanoMarker>(DEFAULT_MARKERS[0]);
+  const [ floorPlanZoom, setFloorPlanZoom ] = useState<PointZoom>([1, 0, 0]);
+
+  let localZoomInFn, localZoomOutFn;
+
+  if (view === 'blueprint-view') {
+    localZoomInFn = () => {
+      setFloorPlanZoom(getZoomInValue(floorPlanZoom))
+    };
+    localZoomOutFn = () => {
+      setFloorPlanZoom(getZoomOutValue(floorPlanZoom))
+    };
+  } else {
+    localZoomInFn = zoomInMethod;
+    localZoomOutFn = zoomOutMethod;
+  }
+
+  useEffect(() => {
+    if (view !== 'blueprint-view') {
+      return;
+    }
+
+    setFloorPlanZoom([1, 0, 0]);
+  },[view]);
+
+  function onZoomChanged(zoom: PointZoom) {
+    setFloorPlanZoom(zoom);
+  }
+
+  const img = useFetchBlueprintFabricImage(20, '2021-10-14');
 
   //if (!user) return null;
 
@@ -42,17 +75,40 @@ export const PanoViewer: React.FC = () => {
         <Arrow />
       </>
     ) : (
-      <FloorPlan />
+      img && <FloorPlan
+        bgImg={img}
+        markers={DEFAULT_MARKERS}
+        selectedMarker={selectedMarker}
+        onMarkerClick={(marker) => setSelectedMarker(marker)}
+        zoom={floorPlanZoom}
+        onZoomChanged={onZoomChanged}
+      />
     );
+
+  const hasMinimap = true;//['single-pano'].includes(view);
 
   return (
     <FloorNavContextProvider>
       <Header />
       {selectedView}
       <LeftBar />
-      <MiniMap />
+      {hasMinimap && img != null && <MiniMap
+        bgImg={img}
+        markers={DEFAULT_MARKERS}
+        selectedMarker={selectedMarker}
+        onMarkerClick={(marker) => setSelectedMarker(marker)}
+      />}
       <FloorNav />
-      <BottomBar zoomIn={zoomInMethod} zoomOut={zoomOutMethod} />
+      <BottomBar zoomIn={localZoomInFn} zoomOut={localZoomOutFn} />
     </FloorNavContextProvider>
   );
 };
+
+function getZoomInValue(zoom: PointZoom) : PointZoom {
+  return [ Math.min(Math.ceil(zoom[0] + 0.01), FLOORPLAN_ZOOM_MIN_MAX[1]), 0, 0 ];
+}
+
+
+function getZoomOutValue(zoom: PointZoom) : PointZoom {
+  return [ Math.max(Math.floor(zoom[0] - 0.01), FLOORPLAN_ZOOM_MIN_MAX[0]), 0, 0 ];
+}

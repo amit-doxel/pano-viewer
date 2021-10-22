@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react';
 import { fabric } from 'fabric';
 
-import { UseBlueprintProps, BlueprintRenderOpts, PanoMarker } from './models';
+import {
+  UseBlueprintProps,
+  BlueprintRenderOpts,
+  PanoMarker,
+  PointZoom,
+} from './models';
+
 import {
   MOUSE_DOWN_EVENT,
   MOUSE_UP_EVENT,
   MOUSE_MOVE_EVENT,
+  MOUSE_OUT_EVENT,
   MOUSE_WHEEL_EVENT,
   MARKER_RADIUS,
   MARKER_COLOR,
@@ -14,28 +21,42 @@ import {
   ZOOM_IN_MAX,
   PIN_PATH,
   CANVAS_OPTS,
+  IMG_OPTS,
   BLUEPRINT_RENDER_OPTS_INIT_STATE,
   PATH_DEFAULT_OPTIONS,
   MARKER_DEFAULT_OPTIONS,
 } from './constants';
 
+import {
+  deriveMarkerRadius,
+  derivePathWidth,
+  getFabricImageScaleFactor,
+  getBlueprintRenderOptsFromImg,
+  addImageToCanvas,
+} from './fabricImageUtils';
+
 const useBlueprint = (props: UseBlueprintProps): void => {
   const {
     wrapperRef,
     canvasRef,
-    bgImageUrl,
+    bgImg,
     markers,
     selectedMarker,
     selectionType,
-    enableSelectZoomPan,
-    onMarkerSelected,
+    zoom,
+    enableInitialZoomForSelectedMarker,
+    enableCenterOnSelect,
+    enablePanning,
+
+    onMarkerClick,
     onZoomChanged,
   } = props;
 
   const [canvas$, setCanvas$] = useState<fabric.Canvas | null>(null);
   const [bgImg$, setBGImg$] = useState<fabric.Image | null>(null);
-  const [markerRadius, setMarkerRadius] = useState<number>(MARKER_RADIUS);
+  const [markers$, setMarkers$] = useState<fabric.Circle[]>([]);
 
+  // set canvas and bg image
   useEffect(() => {
     if (!wrapperRef.current) {
       return;
@@ -49,85 +70,167 @@ const useBlueprint = (props: UseBlueprintProps): void => {
 
     const canvas = canvasRef.current;
 
-    if (!bgImageUrl) {
+    if (!bgImg) {
       return;
     }
 
     canvas.width = clientWidth;
     canvas.height = clientHeight;
 
-    const canvas$ = new fabric.Canvas(canvas, {
-      selection: false,
-    });
+    const canvas$ = new fabric.Canvas(canvas, CANVAS_OPTS);
 
     setCanvas$(canvas$);
 
-    fabric.Image.fromURL(
-      bgImageUrl,
-      function (img$: fabric.Image) {
-        const isImageFetched =
-          img$.get('width') !== 0 && img$.get('height') !== 0;
+    const img$ = new fabric.Image(bgImg, IMG_OPTS);
 
-        if (!isImageFetched) {
-          console.error(
-            'Image.fromURL: Could not fetch blueprint image. Check network tab',
-          );
-        }
+    setBGImg$(img$);
 
-        setBGImg$(img$);
+    addImageToCanvas(canvas$, img$);
 
-        addImageToCanvas(canvas$, img$);
-
-        let localMarkerRadius = deriveMarkerRadius(img$);
-
-        setMarkerRadius(localMarkerRadius);
-
-        const imgScaleFactor = getFabricImageScaleFactor(img$);
-        const topImgOffset = img$.get('top');
-        const leftImgOffset = img$.get('left');
-
-        const blueprintRenderOpts = {
-          imgScaleFactor,
-          topImgOffset,
-          leftImgOffset,
-        };
-
-        const pathWidth = derivePathWidth(img$);
-
-        addWalkPathToCanvas(canvas$, markers, pathWidth, blueprintRenderOpts);
-
-        addMarkersToCanvas(canvas$, markers, {
-          ...blueprintRenderOpts,
-          selectionType,
-          onMarkerSelected,
-          onZoomChanged,
-          circleRadius: localMarkerRadius,
-        });
-      },
-      CANVAS_OPTS,
-    );
-
-    enableZoom(canvas$, onZoomChanged);
-    enablePanning(canvas$);
+    if (enablePanning) {
+      enableCanvasPanning(canvas$);
+    }
 
     return () => {
-      cleanUpEvents(canvas$);
+      cleanUpPanEvents(canvas$);
       canvas$.clear();
     };
   }, [
-    markers,
-    bgImageUrl,
-    selectionType,
-    onMarkerSelected,
-    onZoomChanged,
+    bgImg,
     wrapperRef,
     canvasRef,
+    enablePanning,
   ]);
 
+  // handle marker and path rendering
   useEffect(() => {
-    if (!selectedMarker || !bgImg$ || !canvas$) {
+
+    if (!canvas$ || !bgImg$  || !markers ) {
       return;
     }
+
+    const markerRadius = deriveMarkerRadius(bgImg$);
+
+    const pathWidth = derivePathWidth(bgImg$);
+
+    const blueprintRenderOpts = getBlueprintRenderOptsFromImg(bgImg$);
+
+    addWalkPathToCanvas(canvas$, markers, pathWidth, blueprintRenderOpts);
+
+    const markers$ = addMarkersToCanvas(canvas$, markers, {
+      ...blueprintRenderOpts,
+      onMarkerClick,
+      circleRadius: markerRadius,
+    });
+
+    setMarkers$(markers$);
+
+  }, [
+    canvas$,
+    bgImg$,
+    markers,
+    onMarkerClick,
+  ]);
+
+
+  // handle wheel zooming
+  useEffect(() => {
+
+    if (!canvas$) {
+      return;
+    }
+
+    enableZoom(canvas$, (zoom) => {
+
+      onZoomChanged && onZoomChanged(zoom);
+
+      if (!bgImg$ || !selectedMarker || !enableCenterOnSelect) {
+        return;
+      }
+
+      const {
+        imgScaleFactor,
+        topImgOffset,
+        leftImgOffset
+      } = getBlueprintRenderOptsFromImg(bgImg$)
+
+      centerCanvasAroundMarker(
+        canvas$,
+        selectedMarker,
+        imgScaleFactor,
+        leftImgOffset,
+        topImgOffset,
+      );
+
+    });
+
+    return () => {
+      cleanUpZoomEvents(canvas$);
+    }
+  }, [
+    canvas$,
+    selectedMarker,
+    bgImg$,
+    onZoomChanged,
+    enableCenterOnSelect
+  ]);
+
+  // logic that zooms into to a marker and centers the viewport if zoom is not set
+  // and enableInitialZoomForSelectedMarker is enabled
+  useEffect(() => {
+
+    if (!canvas$ || !bgImg$ || zoom != null || !selectedMarker) {
+      return;
+    }
+
+    const markerRadius = deriveMarkerRadius(bgImg$);
+
+    // if radiusRatioToViewport set to 0.03 the zoom level will be set to a value that if applied
+    // makes half of the marker ( radius ) take 3% of the Math.min(canvas$.width!, canvas$.height!)
+    const radiusRatioToViewport = 0.03;
+    const localZoom =
+      (radiusRatioToViewport * Math.min(canvas$.width!, canvas$.height!)) /
+      markerRadius;
+
+    const hasZoomChanged = zoom !== localZoom;
+
+    if (hasZoomChanged && enableInitialZoomForSelectedMarker) {
+
+      canvas$.setZoom(localZoom);
+
+      const imgScaleFactor = getFabricImageScaleFactor(bgImg$);
+      const topImgOffset = bgImg$.get('top') || 0;
+      const leftImgOffset = bgImg$.get('left') || 0;
+
+      centerCanvasAroundMarker(
+        canvas$,
+        selectedMarker,
+        imgScaleFactor,
+        leftImgOffset,
+        topImgOffset,
+      );
+
+      handleBorderConstraints(canvas$)
+
+      onZoomChanged && onZoomChanged([localZoom, selectedMarker.x, selectedMarker.y]);
+    }
+
+  }, [
+    canvas$,
+    bgImg$,
+    zoom,
+    enableInitialZoomForSelectedMarker,
+    selectedMarker,
+    onZoomChanged
+  ]);
+
+  // handle marker selection
+  useEffect(() => {
+    if (!selectedMarker || !bgImg$ || !canvas$ ) {
+      return;
+    }
+
+    const markerRadius = deriveMarkerRadius(bgImg$);
 
     const blueprintRenderOpts = {
       imgScaleFactor: getFabricImageScaleFactor(bgImg$),
@@ -138,25 +241,24 @@ const useBlueprint = (props: UseBlueprintProps): void => {
     };
 
     selectMarker(canvas$, selectedMarker, blueprintRenderOpts);
-  }, [selectedMarker, bgImg$, canvas$, markerRadius, selectionType]);
-
+  }, [
+    selectedMarker,
+    bgImg$,
+    canvas$,
+    selectionType,
+    markers$
+  ]);
+  
+  //handle centering viewport around marker on selection change if enabled
   useEffect(() => {
-    if (!selectedMarker || !bgImg$ || !canvas$ || !enableSelectZoomPan) {
+
+    if (!selectedMarker || !bgImg$ || !canvas$ || !enableCenterOnSelect || !zoom) {
       return;
     }
 
     const imgScaleFactor = getFabricImageScaleFactor(bgImg$);
     const topImgOffset = bgImg$.get('top') || 0;
     const leftImgOffset = bgImg$.get('left') || 0;
-
-    // if radiusRatioToViewport set to 0.03 the zoom level will be set to a value that if applied
-    // makes half of the marker ( radius ) take 3% of the Math.min(canvas$.width!, canvas$.height!)
-    const radiusRatioToViewport = 0.03;
-    const localZoom =
-      (radiusRatioToViewport * Math.min(canvas$.width!, canvas$.height!)) /
-      markerRadius;
-
-    canvas$.setZoom(localZoom);
 
     centerCanvasAroundMarker(
       canvas$,
@@ -165,20 +267,53 @@ const useBlueprint = (props: UseBlueprintProps): void => {
       leftImgOffset,
       topImgOffset,
     );
-  }, [selectedMarker, bgImg$, canvas$, markerRadius, enableSelectZoomPan]);
+
+    handleBorderConstraints(canvas$)
+  }, [
+    selectedMarker,
+    bgImg$,
+    canvas$,
+    enableCenterOnSelect,
+    zoom
+  ]);
+  
+  // handle zoom passed as a parameter
+  useEffect(() => {
+
+    if (!bgImg$ || !canvas$ || !zoom) {
+      return;
+    }
+
+    if (zoom[0] === canvas$.getZoom()) {
+      return;
+    }
+
+    canvas$.zoomToPoint({ x: zoom[1], y: zoom[2] }, zoom[0]);
+
+    if (selectedMarker && enableCenterOnSelect) {
+      const imgScaleFactor = getFabricImageScaleFactor(bgImg$);
+      const topImgOffset = bgImg$.get('top') || 0;
+      const leftImgOffset = bgImg$.get('left') || 0;
+
+      centerCanvasAroundMarker(
+        canvas$,
+        selectedMarker,
+        imgScaleFactor,
+        leftImgOffset,
+        topImgOffset,
+      );
+    }
+
+    handleBorderConstraints(canvas$)
+  }, [
+    canvas$,
+    zoom,
+    bgImg$,
+    enableCenterOnSelect,
+    selectedMarker
+  ]);
+
 };
-
-function addImageToCanvas(canvas$: fabric.Canvas, img$: fabric.Image) {
-  const canvasWidth = canvas$.width || 1;
-  const canvasHeight = canvas$.height || 1;
-
-  resizeOffsetBlueprintImage(img$, canvasWidth, canvasHeight);
-
-  img$.lockMovementY = true;
-  img$.lockMovementX = true;
-
-  canvas$.add(img$);
-}
 
 function addWalkPathToCanvas(
   canvas$: fabric.Canvas,
@@ -190,6 +325,13 @@ function addWalkPathToCanvas(
   const topImgOffset = opts?.topImgOffset || 0;
   const leftImgOffset = opts?.leftImgOffset || 0;
 
+  const path$ = getFromCanvasCache(canvas$, 'WALK_PATH');
+
+  if (path$) {
+    canvas$.remove(path$);
+  }
+
+
   const pathStr = markers.reduce((acc, { x, y }) => {
     return (
       acc +
@@ -199,67 +341,51 @@ function addWalkPathToCanvas(
     );
   }, 'M');
 
-  const path = new fabric.Path(pathStr, {
+  const newPath$ = new fabric.Path(pathStr, {
     ...PATH_DEFAULT_OPTIONS,
     strokeWidth: pathWidth,
   });
 
-  canvas$.add(path);
-}
+  setCanvasCache(canvas$, 'WALK_PATH', newPath$);
 
-function deriveMarkerRadius(img$: fabric.Image) {
-  return (
-    Math.min(img$.getScaledWidth() || 0, img$.getScaledHeight() || 0) * 0.01
-  );
-}
-
-function derivePathWidth(img$: fabric.Image) {
-  return (
-    Math.min(img$.getScaledWidth() || 0, img$.getScaledHeight() || 0) * 0.003
-  );
-}
-
-function getFabricImageScaleFactor(img$: fabric.Image) {
-  return Math.sqrt(
-    (img$.getScaledHeight() * img$.getScaledWidth()) /
-      (img$.height! * img$.width!),
-  );
+  canvas$.add(newPath$);
 }
 
 function addMarkersToCanvas(
   canvas$: fabric.Canvas,
   markers: PanoMarker[],
   opts: BlueprintRenderOpts = BLUEPRINT_RENDER_OPTS_INIT_STATE,
-) {
-  const onMarkerSelected = opts?.onMarkerSelected;
+) : fabric.Circle[] {
+  const onMarkerClick = opts?.onMarkerClick;
 
-  const markers$: fabric.Circle[] = [];
+  const markers$ = getFromCanvasCache(canvas$, 'MARKERS') || [];
+
+  markers$.forEach((marker$: fabric.Circle) => {
+    canvas$.remove(marker$);
+  });
+
+  const newMarkers$: fabric.Circle[] = [];
 
   markers.forEach((marker) => {
     const circle$ = addCircleToCanvas(canvas$, marker, opts);
 
-    markers$.push(circle$);
+    newMarkers$.push(circle$);
 
     circle$.on('mouseup', () => {
-      selectMarker(canvas$, marker, {
-        ...opts,
-        circleRadius: (opts.circleRadius || MARKER_RADIUS) * 0.7,
-      });
-
-      if (onMarkerSelected) {
-        onMarkerSelected(marker);
+      if (onMarkerClick) {
+        onMarkerClick(marker);
       }
     });
-
-    canvas$.add(circle$);
   });
 
-  return markers$;
+  setCanvasCache(canvas$, 'MARKERS', newMarkers$);
+
+  return newMarkers$;
 }
 
 function enableZoom(
   canvas$: fabric.Canvas,
-  onZoomChanged?: (zoom: number) => void,
+  onZoomChanged?: (zoom: PointZoom) => void,
 ): void {
   canvas$.on(MOUSE_WHEEL_EVENT, function (event$: fabric.IEvent<WheelEvent>) {
     handleZoomEvent(canvas$, event$);
@@ -267,7 +393,8 @@ function enableZoom(
     handleBorderConstraints(canvas$);
 
     if (onZoomChanged) {
-      onZoomChanged(canvas$.getZoom());
+      const { offsetX, offsetY } = event$.e;
+      onZoomChanged([canvas$.getZoom(), offsetX, offsetY]);
     }
 
     event$.e.preventDefault();
@@ -275,7 +402,7 @@ function enableZoom(
   });
 }
 
-function enablePanning(canvas$: fabric.Canvas) {
+function enableCanvasPanning(canvas$: fabric.Canvas) {
   let isPanning = false;
 
   canvas$.on(MOUSE_DOWN_EVENT, () => {
@@ -284,6 +411,14 @@ function enablePanning(canvas$: fabric.Canvas) {
 
   canvas$.on(MOUSE_UP_EVENT, () => {
     isPanning = false;
+  });
+
+  canvas$.on(MOUSE_OUT_EVENT, (e) => {
+    //NOTE: this event also fires for objects on the canvas
+    //this checks if mouseout event happend for the canvas
+    if( !("nextTarget" in e)){
+      isPanning = false;
+    }
   });
 
   canvas$.on(MOUSE_MOVE_EVENT, (event$: fabric.IEvent<MouseEvent>) => {
@@ -319,43 +454,14 @@ function enablePanning(canvas$: fabric.Canvas) {
   });
 }
 
-function cleanUpEvents(canvas$: fabric.Canvas) {
-  canvas$.off(MOUSE_DOWN_EVENT);
-  canvas$.off(MOUSE_UP_EVENT);
-  canvas$.off(MOUSE_MOVE_EVENT);
+function cleanUpZoomEvents(canvas$: fabric.Canvas) : void {
   canvas$.off(MOUSE_WHEEL_EVENT);
 }
 
-function resizeOffsetBlueprintImage(
-  img$: fabric.Image,
-  containerWidth: number,
-  containerHeight: number,
-): fabric.Image {
-  const imgWidth = img$.get('width') || 1;
-  const imgHeight = img$.get('height') || 1;
-
-  const widthToHeightRatio = imgWidth / imgHeight;
-
-  const isLandscape = widthToHeightRatio > 1;
-
-  let topImgOffset;
-
-  if (isLandscape) {
-    img$.scaleToWidth(containerWidth);
-
-    const heightToWidthRatio = imgHeight / imgWidth;
-    const scaledImgHeight = containerWidth * heightToWidthRatio;
-    topImgOffset = (containerHeight - scaledImgHeight) / 2;
-
-    img$.set({ top: topImgOffset });
-  } else {
-    console.warn(
-      'WARNING: Horizonal Initial image offseting is not implemented yet',
-    );
-    img$.scaleToHeight(containerHeight);
-  }
-
-  return img$;
+function cleanUpPanEvents(canvas$: fabric.Canvas) : void {
+  canvas$.off(MOUSE_DOWN_EVENT);
+  canvas$.off(MOUSE_UP_EVENT);
+  canvas$.off(MOUSE_MOVE_EVENT);
 }
 
 function addCircleToCanvas(

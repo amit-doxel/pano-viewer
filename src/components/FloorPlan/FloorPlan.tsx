@@ -1,10 +1,31 @@
-import { useState } from 'react';
+import {
+  Blueprint,
+  PanoMarker,
+  OnMarkerClick,
+  OnZoomChanged,
+  PointZoom
+} from '../Blueprint';
 
-import Blueprint from '../Blueprint/Blueprint';
-import { DEFAULT_MARKERS, IMG_URL } from '../Blueprint/constants';
+interface  FloorPlanProps {
+  bgImg: HTMLImageElement;
+  markers: PanoMarker[];
+  zoom: PointZoom;
 
-export const FloorPlan: React.FC = () => {
-  const [count] = useState(0);
+  onZoomChanged: OnZoomChanged;
+  onMarkerClick: OnMarkerClick;
+
+  selectedMarker ?: PanoMarker;
+}
+
+export const FloorPlan: React.FC<FloorPlanProps> = (props) => {
+
+  const {
+    bgImg,
+    markers,
+    onMarkerClick,
+    zoom,
+    selectedMarker,
+  } = props
 
   return (
     <div
@@ -17,13 +38,16 @@ export const FloorPlan: React.FC = () => {
       }}
     >
       <div
-        style={{ width: '90%', height: '80%', backgroundColor: 'lightgrey' }}
+        style={{ width: '90%', height: '80%' }}
       >
         <Blueprint
-          markers={DEFAULT_MARKERS}
-          selectedMarker={DEFAULT_MARKERS[count]}
-          bgImageUrl={IMG_URL}
+          markers={markers}
+          selectedMarker={selectedMarker}
           selectionType={'inner_circle'}
+          enablePanning={true}
+          onMarkerClick={onMarkerClick}
+          bgImg={bgImg}
+          zoom={zoom}
         />
       </div>
     </div>

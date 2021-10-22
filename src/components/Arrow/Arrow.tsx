@@ -3,7 +3,7 @@ import { usePanoramaContext } from '../../context/PanoramaContext/usePanoramaCon
 import './styles.css';
 
 export const Arrow: React.FC = () => {
-  const { setSceneId } = usePanoramaContext()
+  const { setSceneId } = usePanoramaContext();
   return (
     <div className='arrow-wrapper'>
       <div className='arrow-theme'>

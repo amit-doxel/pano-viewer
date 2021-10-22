@@ -16,6 +16,9 @@ import { useFetchBlueprint } from '../../hooks/useFetchBlueprint';
 
 import { FloorNavContextProvider } from '../../context/FloorNavContext/FloorNavContextProvider';
 import { useViewContext } from '../../context/ViewContext/useViewContext';
+import useFetchPanoImage from '../../hooks/useFetchPanoImage';
+import useFetchScenes from '../../hooks/useFetchScenes';
+import { Loader } from '../Loader';
 
 // NOTES:
 // 1. Should have a PanoVisContainer component that can hold
@@ -27,13 +30,16 @@ export const PanoViewer: React.FC = () => {
   // debug info, will keep this react becomes stable
   useCountRenders('PanoViewer');
   const { user } = useIdentity();
-  const { scene, camera } = useScene();
+  const { scene, camera, loading } = useScene();
   const { view, zoomMethods } = useViewContext();
   const { zoomInMethod, zoomOutMethod } = zoomMethods;
 
-  const blueprintUrl = useFetchBlueprint(20, '2021-10-14');
+  const blueprintUrl = useFetchBlueprint(17, '2021-02-08');
+  const scenes = useFetchScenes(17, '2021-02-08', 'Prologis+Redlands', 1);
 
-  //if (!user) return null;
+  if (!user) return null;
+
+  if (loading && view === 'single-pano') return <Loader />;
 
   const selectedView =
     view === 'single-pano' ? (

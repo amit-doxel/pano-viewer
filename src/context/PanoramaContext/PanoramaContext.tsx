@@ -1,19 +1,23 @@
 import { createContext } from 'react';
 
 export type PanoramaContextValue = {
-  currentFloor: string;
-  currentScene: string;
-  projectId: string;
-  setCurrentFloor: (value: string) => any;
-  setCurrentScene: (value: string) => any;
-  setProjectId: (value: string) => any;
+  currentFloor: number;
+  projectId: number;
+  buildingName: string;
+  sceneId: number;
+  setCurrentFloor: (value: number) => any;
+  setProjectId: (value: number) => any;
+  setBuildingName: (value: string) => any;
+  setSceneId: (Value: number) => any;
 };
 
 export const PanoramaContext = createContext({
-  currentFloor: '1',
-  currentScene: 'pano_image/second_image.jpg',
-  projectId: '1',
-  setCurrentFloor: (value: string) => null,
-  setCurrentScene: (value: string) => null,
-  setProjectId: (value: string) => null,
+  currentFloor: 1,
+  projectId: 17,
+  buildingName: 'Prologis+Redlands',
+  sceneId: 387662,
+  setCurrentFloor: (value: number) => null,
+  setProjectId: (value: number) => null,
+  setBuildingName: (value: string) => null,
+  setSceneId: (value: number) => null,
 });

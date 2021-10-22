@@ -4,7 +4,8 @@ import { getData } from '../utils/get-data';
 export interface FloorDataType {
   id: number;
   floor_name: string;
-  scenes: number;
+  floor: number;
+  sceneId: number;
 }
 
 export function useFloorNavData() {

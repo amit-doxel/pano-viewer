@@ -29,8 +29,7 @@ export const useScene = () => {
 
     if (panoEl) {
       img.onload = () => {
-        console.log('loaded image');
-        texture = new THREE.Texture(this);
+        texture = new THREE.Texture( this );
         texture.needsUpdate = true;
       };
     }

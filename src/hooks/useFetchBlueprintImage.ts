@@ -14,7 +14,7 @@ function fetchBlueprintImgUrl(
   ).then((res) => res.json());
 }
 
-export function useFetchBlueprintFabricImage(projectId: number, dateStr: string) {
+export function useFetchBlueprintImage(projectId: number, dateStr: string) {
   const [img, setImg] = useState<HTMLImageElement | null>(null);
 
   useEffect(() => {

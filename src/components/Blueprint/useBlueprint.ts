@@ -179,7 +179,7 @@ const useBlueprint = (props: UseBlueprintProps): void => {
   // and enableInitialZoomForSelectedMarker is enabled
   useEffect(() => {
 
-    if (!canvas$ || !bgImg$ || zoom != null || !selectedMarker) {
+    if (!canvas$ || !bgImg$ || zoom != null) {
       return;
     }
 
@@ -197,6 +197,10 @@ const useBlueprint = (props: UseBlueprintProps): void => {
     if (hasZoomChanged && enableInitialZoomForSelectedMarker) {
 
       canvas$.setZoom(localZoom);
+
+      if (!selectedMarker) {
+        return;
+      }
 
       const imgScaleFactor = getFabricImageScaleFactor(bgImg$);
       const topImgOffset = bgImg$.get('top') || 0;
@@ -220,7 +224,6 @@ const useBlueprint = (props: UseBlueprintProps): void => {
     bgImg$,
     zoom,
     enableInitialZoomForSelectedMarker,
-    selectedMarker,
     onZoomChanged
   ]);
 
@@ -252,7 +255,7 @@ const useBlueprint = (props: UseBlueprintProps): void => {
   //handle centering viewport around marker on selection change if enabled
   useEffect(() => {
 
-    if (!selectedMarker || !bgImg$ || !canvas$ || !enableCenterOnSelect || !zoom) {
+    if (!selectedMarker || !bgImg$ || !canvas$ || !enableCenterOnSelect) {
       return;
     }
 
@@ -274,7 +277,6 @@ const useBlueprint = (props: UseBlueprintProps): void => {
     bgImg$,
     canvas$,
     enableCenterOnSelect,
-    zoom
   ]);
   
   // handle zoom passed as a parameter

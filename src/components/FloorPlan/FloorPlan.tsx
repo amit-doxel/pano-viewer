@@ -1,3 +1,4 @@
+import { MiniPano } from "../MiniPano/MiniPano";
 import {
   Blueprint,
   PanoMarker,
@@ -49,6 +50,9 @@ export const FloorPlan: React.FC<FloorPlanProps> = (props) => {
           bgImg={bgImg}
           zoom={zoom}
         />
+        <div style={{position: 'absolute', width: '300px', height: '100px', right: '30px', top: '25%'}}>
+          <MiniPano />
+        </div>
       </div>
     </div>
   );

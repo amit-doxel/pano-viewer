@@ -35,7 +35,8 @@ export const MiniMap: React.FC<FloorPlanProps> = (props) => {
     <div style={{
       height: '180px',
       borderRadius: 5,
-      overflow: 'hidden'
+      overflow: 'hidden',
+      background: 'white'
     }}>
     <Blueprint
       markers={markers}
@@ -59,12 +60,14 @@ export const MiniMap: React.FC<FloorPlanProps> = (props) => {
       <span>
         {zoomDisplay}
       </span>
-      <div style={{float: 'right', display: 'flex'}}>
+      <div style={{float: 'right', display: 'flex', paddingRight: '5px'}}>
         <img onClick={() => zoom != null && setZoom(getZoomOutValue(zoom))} style={{marginRight: '30px'}} src='/assets/icons/minus.svg' alt='zoom-in-icon'></img>
         <img onClick={() => zoom != null && setZoom(getZoomInValue(zoom))} src='/assets/icons/add.svg' alt='zoom-out-icon'></img>
       </div>
     </div>
   );
+
+  const imgSrc = `/assets/icons/${isCollapsed ? 'up' : 'down' }.svg`
 
   return (
     <div
@@ -76,13 +79,13 @@ export const MiniMap: React.FC<FloorPlanProps> = (props) => {
         border: '5px solid black',
         borderRadius: '5px',
         width: '180px',
-        background: 'white'
+        background: 'black'
       }}
     >
       <div onClick={() => setIsCollapsed(!isCollapsed)} style={{padding: '5px 0', background: 'black'}}>
         <span style={{color: 'white'}}>Map</span>
-        <div style={{float: 'right'}}>
-          <img src='/assets/icons/down.svg' alt='collapse-icon'></img>
+        <div style={{float: 'right', paddingRight: '5px'}}>
+          <img src={imgSrc} alt='collapse-icon'></img>
         </div>
       </div>
       {!isCollapsed && body}

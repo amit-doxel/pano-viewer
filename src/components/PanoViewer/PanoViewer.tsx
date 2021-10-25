@@ -12,12 +12,9 @@ import { Arrow } from '../Arrow';
 
 import { useScene, useCountRenders } from '../../hooks';
 import { useIdentity } from '../../hooks/useIdentity';
-import { useFetchBlueprint } from '../../hooks/useFetchBlueprint';
 
 import { FloorNavContextProvider } from '../../context/FloorNavContext/FloorNavContextProvider';
 import { useViewContext } from '../../context/ViewContext/useViewContext';
-import useFetchPanoImage from '../../hooks/useFetchPanoImage';
-import useFetchScenes from '../../hooks/useFetchScenes';
 import { Loader } from '../Loader';
 
 // NOTES:
@@ -33,9 +30,6 @@ export const PanoViewer: React.FC = () => {
   const { scene, camera, loading } = useScene();
   const { view, zoomMethods } = useViewContext();
   const { zoomInMethod, zoomOutMethod } = zoomMethods;
-
-  const blueprintUrl = useFetchBlueprint(17, '2021-02-08');
-  const scenes = useFetchScenes(17, '2021-02-08', 'Prologis+Redlands', 1);
 
   if (!user) return null;
 

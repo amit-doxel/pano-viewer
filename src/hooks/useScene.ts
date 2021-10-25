@@ -20,19 +20,19 @@ export const useScene = () => {
     camera.rotation.y = Math.PI;
     camera.rotation.z = Math.PI;
 
-    // const img = new Image();
-    // img.src = panoImage;
+    const img = document.createElement('img');
 
-    // var texture;
+    let texture;
 
-    // img.onload = () => {
-    //   texture = new THREE.Texture(img);
-    //   texture.needsUpdate = true;
+    img.onload = () => {
+      texture = new THREE.Texture(img);
+      texture.needsUpdate = true;
+      const sphere = createSphereMesh(texture);
+      scene.add(sphere);
+    };
 
-    // };
-
-    const sphere = createSphereMesh(panoImage);
-    scene.add(sphere);
+    img.src = panoImage;
+    img.setAttribute('crossorigin', 'anonymous');
   }, [panoImage, loading]);
 
   return {
@@ -42,13 +42,13 @@ export const useScene = () => {
   };
 };
 
-function createSphereMesh(imageUrl: string): THREE.Mesh {
+function createSphereMesh(texture: any): THREE.Mesh {
   const sphereGeometry = new THREE.SphereGeometry(500, 60, 40);
   sphereGeometry.scale(-1, 1, 1);
-  const loader = new THREE.TextureLoader();
-  loader.crossOrigin = 'localhost:3002';
-  const texture = loader.load(imageUrl);
-  const material = new THREE.MeshPhongMaterial({ map: texture });
+  // const loader = new THREE.TextureLoader();
+  // loader.crossOrigin = 'localhost:3002';
+  // const texture = loader.load(imageUrl);
+  const material = new THREE.MeshBasicMaterial({ map: texture });
   const sphereMesh = new THREE.Mesh(sphereGeometry, material);
 
   sphereMesh.rotation.z = Math.PI;

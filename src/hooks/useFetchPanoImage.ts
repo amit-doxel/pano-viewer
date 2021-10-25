@@ -18,6 +18,7 @@ function useFetchPanoImage(projectId: number, sceneId: number) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     fetchPanoImage(projectId, sceneId)
       .then((res) => {
         setPanoImage(res.link);

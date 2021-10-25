@@ -4,7 +4,7 @@ import useBlueprint from './useBlueprint';
 import { BlueprintProps } from './models';
 import './styles.css';
 
-const Blueprint: React.FC<BlueprintProps> = (props) => {
+export const Blueprint: React.FC<BlueprintProps> = (props) => {
   const wrapperRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const canvasRef: RefObject<HTMLCanvasElement> =
     useRef<HTMLCanvasElement>(null);
@@ -21,5 +21,3 @@ const Blueprint: React.FC<BlueprintProps> = (props) => {
     </div>
   );
 };
-
-export default Blueprint;

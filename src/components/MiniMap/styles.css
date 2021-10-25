@@ -1,14 +1,3 @@
-.mini-map {
-  position: fixed;
-  left: 8px;
-  bottom: 8px;
-  width: 180px;
-  height: 180px;
-  background-color: lightblue;
-  border-radius: 2;
-  margin: 1em;
-}
-
 @media only screen and (max-width: 768px) {
   .mini-map {
     display: none;

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useFloorNavContext } from '../../context/FloorNavContext/useFloorNavContext';
-import { useViewContext } from '../../context/ViewContext/useViewContext';
+import { useViewContext, View } from '../../context/ViewContext';
 
 import './styles.css';
 
@@ -23,10 +23,10 @@ export const LeftBar: React.FC = () => {
         <div className='button' onClick={() => setFloorNav(!floorNav)}>
           <img src='/assets/icons/switch.svg' alt='switch-icon'></img>
         </div>
-        <div className='button' onClick={() => setView('blueprint-view')}>
+        <div className='button' onClick={() => setView(View.FLOORPLAN)}>
           <img src='/assets/icons/floor.svg' alt='floor-icon'></img>
         </div>
-        <div className='button' onClick={() => setView('single-pano')}>
+        <div className='button' onClick={() => setView(View.SINGLE_PANO)}>
           <img src='/assets/icons/square.svg' alt='square-icon'></img>
         </div>
         <div className='button'>

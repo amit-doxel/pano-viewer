@@ -1,4 +1,5 @@
 import { createContext } from 'react';
+import {View} from './models';
 
 export interface ZoomMethods {
   zoomInMethod: () => any;
@@ -6,15 +7,15 @@ export interface ZoomMethods {
 }
 
 export type ViewContextValue = {
-  view: string;
+  view: View;
   zoomMethods: ZoomMethods;
   setZoomMethods: (value: ZoomMethods) => any;
-  setView: (view: string) => any;
+  setView: (view: View) => void;
 };
 
 export const ViewContext = createContext({
-  view: 'single-pano',
+  view: View.SINGLE_PANO,
   zoomMethods: { zoomInMethod: () => null, zoomOutMethod: () => null },
   setZoomMethods: (value: ZoomMethods) => null,
-  setView: (view: string) => null,
+  setView: (view: View) => {},
 });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
 import { FloorPlan } from '../FloorPlan';
 import { MiniMap } from '../MiniMap';
@@ -10,12 +10,16 @@ import { Header } from '../Header';
 import { FloorNav } from '../FloorNav';
 import { Arrow } from '../Arrow';
 
-import { useScene, useCountRenders } from '../../hooks';
-import { useIdentity } from '../../hooks/useIdentity';
+import { useScene, useCountRenders, useFloorplanZoom, useFetchMarkers } from '../../hooks';
+import { useFetchBlueprintImage } from '../../hooks/useFetchBlueprintImage';
 
 import { FloorNavContextProvider } from '../../context/FloorNavContext/FloorNavContextProvider';
-import { useViewContext } from '../../context/ViewContext/useViewContext';
-import { Loader } from '../Loader';
+import { useViewContext, View } from '../../context/ViewContext';
+
+import { PanoMarker } from '../Blueprint';
+
+const PROJECT_ID = 20;
+const DATE_STR = '2021-05-14';
 
 // NOTES:
 // 1. Should have a PanoVisContainer component that can hold
@@ -26,33 +30,75 @@ import { Loader } from '../Loader';
 export const PanoViewer: React.FC = () => {
   // debug info, will keep this react becomes stable
   useCountRenders('PanoViewer');
-  const { user } = useIdentity();
-  const { scene, camera, loading } = useScene();
+  const { scene, camera } = useScene();
   const { view, zoomMethods } = useViewContext();
   const { zoomInMethod, zoomOutMethod } = zoomMethods;
 
-  if (!user) return null;
+  const [ selectedMarker, setSelectedMarker ] = useState<PanoMarker | undefined>();
 
-  if (loading && view === 'single-pano') return <Loader />;
+  const {
+    zoom: floorplanZoom,
+    onZoomChanged: onFloorplanZoomChanged,
+    zoomInMethod: floorplanZoomInFn,
+    zoomOutMethod: floorplanZoomOutFn,
+  } = useFloorplanZoom(view);
+
+  let localZoomInFn, localZoomOutFn;
+
+  if (view === View.FLOORPLAN) {
+    localZoomInFn = floorplanZoomInFn;
+    localZoomOutFn = floorplanZoomOutFn;
+  } else {
+    localZoomInFn = zoomInMethod;
+    localZoomOutFn = zoomOutMethod;
+  }
+
+  const img = useFetchBlueprintImage(PROJECT_ID, DATE_STR);
+
+  const markers = useFetchMarkers(PROJECT_ID, DATE_STR);
+
+  useEffect(() => {
+
+    if (!markers.length) {
+      return;
+    }
+
+    setSelectedMarker(markers[0]);
+
+  }, [markers]);
 
   const selectedView =
-    view === 'single-pano' ? (
+    view === View.SINGLE_PANO ? (
       <>
         <ThreeCanvas scene={scene} camera={camera} />
         <Arrow />
       </>
     ) : (
-      <FloorPlan />
+      img && <FloorPlan
+        bgImg={img}
+        markers={markers}
+        selectedMarker={selectedMarker}
+        onMarkerClick={(marker) => setSelectedMarker(marker)}
+        zoom={floorplanZoom}
+        onZoomChanged={onFloorplanZoomChanged}
+      />
     );
+
+  const hasMinimap = [View.SINGLE_PANO].includes(view);
 
   return (
     <FloorNavContextProvider>
       <Header />
       {selectedView}
       <LeftBar />
-      <MiniMap />
+      {hasMinimap && img != null && <MiniMap
+        bgImg={img}
+        markers={markers}
+        selectedMarker={selectedMarker}
+        onMarkerClick={(marker) => setSelectedMarker(marker)}
+      />}
       <FloorNav />
-      <BottomBar zoomIn={zoomInMethod} zoomOut={zoomOutMethod} />
+      <BottomBar zoomIn={localZoomInFn} zoomOut={localZoomOutFn} />
     </FloorNavContextProvider>
   );
 };

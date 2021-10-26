@@ -6,6 +6,7 @@ export interface FloorDataType {
   floor_name: string;
   floor: number;
   sceneId: number;
+  scenes: number;
 }
 
 export function useFloorNavData() {

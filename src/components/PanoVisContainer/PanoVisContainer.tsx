@@ -8,6 +8,5 @@ import { BluePrintContainer } from '../BluePrintContainer/BluePrintContainer';
 export const PanoVisContainer: React.FC = () => {
   const { view } = useViewContext();
 
-  if (view === View.SINGLE_PANO) return <PanoContainer />;
-  else return <BluePrintContainer />;
+  return view === View.SINGLE_PANO ? <PanoContainer /> : <BluePrintContainer />;
 };

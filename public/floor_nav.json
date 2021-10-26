@@ -3,30 +3,35 @@
     "id": 1,
     "floor": 1,
     "floor_name": "Floor 1",
-    "sceneId": 387598
+    "sceneId": 387598,
+    "scenes": 2
   },
   {
     "id": 2,
     "floor": 1,
     "floor_name": "Floor 2",
-    "sceneId": 387567
+    "sceneId": 387567,
+    "scenes": 0
   },
   {
     "id": 3,
     "floor": 1,
     "floor_name": "Floor 3",
-    "sceneId": 387600
+    "sceneId": 387600,
+    "scenes": 1
   },
   {
     "id": 4,
     "floor": 1,
     "floor_name": "Floor 4",
-    "sceneId": 387589
+    "sceneId": 387589,
+    "scenes": 0
   },
   {
     "id": 5,
     "floor": 1,
     "floor_name": "Floor 5",
-    "sceneId": 387679
+    "sceneId": 387679,
+    "scenes": 2
   }
 ]

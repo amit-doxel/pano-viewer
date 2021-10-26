@@ -16,12 +16,9 @@ export const useScene = () => {
     camera.rotation.y = Math.PI;
     camera.rotation.z = Math.PI;
 
-    const sphere = createSphereMesh(
-      currentScene,
-      // will remove this link and add panoImage when the real API integration will be done
-    );
+    const sphere = createSphereMesh(currentScene);
     scene.add(sphere);
-  }, []);
+  }, [currentScene]);
 
   return {
     scene: scene,

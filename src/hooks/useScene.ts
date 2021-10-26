@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 import * as THREE from 'three';
-
 import { usePanoramaContext } from '../context/PanoramaContext/usePanoramaContext';
-import useFetchPanoImage from './useFetchPanoImage';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -13,38 +11,28 @@ const camera = new THREE.PerspectiveCamera(
 );
 
 export const useScene = () => {
-  const { projectId, sceneId } = usePanoramaContext();
-  const { loading, panoImage } = useFetchPanoImage(projectId, sceneId);
-
+  const { currentScene } = usePanoramaContext();
   useEffect(() => {
     camera.rotation.y = Math.PI;
     camera.rotation.z = Math.PI;
 
-    const img = document.createElement('img');
-
-    let texture;
-
-    img.onload = () => {
-      texture = new THREE.Texture(img);
-      texture.needsUpdate = true;
-      const sphere = createSphereMesh(texture);
-      scene.add(sphere);
-    };
-
-    img.src = panoImage;
-    img.setAttribute('crossorigin', 'anonymous');
-  }, [panoImage, loading]);
+    const sphere = createSphereMesh(
+      currentScene,
+      // will remove this link and add panoImage when the real API integration will be done
+    );
+    scene.add(sphere);
+  }, []);
 
   return {
     scene: scene,
     camera: camera,
-    loading: loading,
   };
 };
 
-function createSphereMesh(texture: any): THREE.Mesh {
+function createSphereMesh(imageUrl: string): THREE.Mesh {
   const sphereGeometry = new THREE.SphereGeometry(500, 60, 40);
   sphereGeometry.scale(-1, 1, 1);
+  const texture = new THREE.TextureLoader().load(imageUrl);
   const material = new THREE.MeshBasicMaterial({ map: texture });
   const sphereMesh = new THREE.Mesh(sphereGeometry, material);
 

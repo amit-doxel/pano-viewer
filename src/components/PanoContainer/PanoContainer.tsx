@@ -11,14 +11,13 @@ import { BottomBar } from '../BottomBar';
 import { useFetchBlueprintImage } from '../../hooks/useFetchBlueprintImage';
 
 import { PanoMarker } from '../Blueprint';
-import { Loader } from '../Loader';
 import { zoomInFunction, zoomOutFunction } from '../../utils/zoom';
 
 const PROJECT_ID = 20;
 const DATE_STR = '2021-05-14';
 
 export const PanoContainer: React.FC = () => {
-  const { scene, camera, loading } = useScene();
+  const { scene, camera } = useScene();
   const { zoomMethods, setZoomMethods } = useViewContext();
   const { zoomInMethod, zoomOutMethod } = zoomMethods;
 
@@ -44,8 +43,6 @@ export const PanoContainer: React.FC = () => {
 
     setSelectedMarker(markers[0]);
   }, [markers]);
-
-  if (loading) return <Loader />;
 
   return (
     <>

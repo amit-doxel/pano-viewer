@@ -3,14 +3,14 @@ import { usePanoramaContext } from '../../context/PanoramaContext/usePanoramaCon
 import './styles.css';
 
 export const Arrow: React.FC = () => {
-  const { setSceneId } = usePanoramaContext();
+  const { setCurrentScene } = usePanoramaContext();
   return (
     <div className='arrow-wrapper'>
       <div className='arrow-theme'>
-        <div onClick={() => setSceneId(387600)}>
+        <div onClick={() => setCurrentScene('pano-image/R0140118.JPG')}>
           <img src='/assets/icons/left-arrow.svg' alt='arrow-icon'></img>
         </div>
-        <div onClick={() => setSceneId(387679)}>
+        <div onClick={() => setCurrentScene('pano-image/R0140102.JPG')}>
           <img src='/assets/icons/right-arrow.svg' alt='arrow-icon'></img>
         </div>
       </div>

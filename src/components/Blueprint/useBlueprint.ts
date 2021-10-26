@@ -95,17 +95,11 @@ const useBlueprint = (props: UseBlueprintProps): void => {
       cleanUpPanEvents(canvas$);
       canvas$.clear();
     };
-  }, [
-    bgImg,
-    wrapperRef,
-    canvasRef,
-    enablePanning,
-  ]);
+  }, [bgImg, wrapperRef, canvasRef, enablePanning]);
 
   // handle marker and path rendering
   useEffect(() => {
-
-    if (!canvas$ || !bgImg$  || !markers ) {
+    if (!canvas$ || !bgImg$ || !markers) {
       return;
     }
 
@@ -124,35 +118,23 @@ const useBlueprint = (props: UseBlueprintProps): void => {
     });
 
     setMarkers$(markers$);
-
-  }, [
-    canvas$,
-    bgImg$,
-    markers,
-    onMarkerClick,
-  ]);
-
+  }, [canvas$, bgImg$, markers, onMarkerClick]);
 
   // handle wheel zooming
   useEffect(() => {
-
     if (!canvas$) {
       return;
     }
 
     enableZoom(canvas$, (zoom) => {
-
       onZoomChanged && onZoomChanged(zoom);
 
       if (!bgImg$ || !selectedMarker || !enableCenterOnSelect) {
         return;
       }
 
-      const {
-        imgScaleFactor,
-        topImgOffset,
-        leftImgOffset
-      } = getBlueprintRenderOptsFromImg(bgImg$)
+      const { imgScaleFactor, topImgOffset, leftImgOffset } =
+        getBlueprintRenderOptsFromImg(bgImg$);
 
       centerCanvasAroundMarker(
         canvas$,
@@ -161,24 +143,16 @@ const useBlueprint = (props: UseBlueprintProps): void => {
         leftImgOffset,
         topImgOffset,
       );
-
     });
 
     return () => {
       cleanUpZoomEvents(canvas$);
-    }
-  }, [
-    canvas$,
-    selectedMarker,
-    bgImg$,
-    onZoomChanged,
-    enableCenterOnSelect
-  ]);
+    };
+  }, [canvas$, selectedMarker, bgImg$, onZoomChanged, enableCenterOnSelect]);
 
   // logic that zooms into to a marker and centers the viewport if zoom is not set
   // and enableInitialZoomForSelectedMarker is enabled
   useEffect(() => {
-
     if (!canvas$ || !bgImg$ || zoom != null) {
       return;
     }
@@ -195,7 +169,6 @@ const useBlueprint = (props: UseBlueprintProps): void => {
     const hasZoomChanged = zoom !== localZoom;
 
     if (hasZoomChanged && enableInitialZoomForSelectedMarker) {
-
       canvas$.setZoom(localZoom);
 
       if (!selectedMarker) {
@@ -214,22 +187,22 @@ const useBlueprint = (props: UseBlueprintProps): void => {
         topImgOffset,
       );
 
-      handleBorderConstraints(canvas$)
+      handleBorderConstraints(canvas$);
 
-      onZoomChanged && onZoomChanged([localZoom, selectedMarker.x, selectedMarker.y]);
+      onZoomChanged &&
+        onZoomChanged([localZoom, selectedMarker.x, selectedMarker.y]);
     }
-
   }, [
     canvas$,
     bgImg$,
     zoom,
     enableInitialZoomForSelectedMarker,
-    onZoomChanged
+    onZoomChanged,
   ]);
 
   // handle marker selection
   useEffect(() => {
-    if (!selectedMarker || !bgImg$ || !canvas$ ) {
+    if (!selectedMarker || !bgImg$ || !canvas$) {
       return;
     }
 
@@ -244,17 +217,10 @@ const useBlueprint = (props: UseBlueprintProps): void => {
     };
 
     selectMarker(canvas$, selectedMarker, blueprintRenderOpts);
-  }, [
-    selectedMarker,
-    bgImg$,
-    canvas$,
-    selectionType,
-    markers$
-  ]);
-  
+  }, [selectedMarker, bgImg$, canvas$, selectionType, markers$]);
+
   //handle centering viewport around marker on selection change if enabled
   useEffect(() => {
-
     if (!selectedMarker || !bgImg$ || !canvas$ || !enableCenterOnSelect) {
       return;
     }
@@ -271,17 +237,11 @@ const useBlueprint = (props: UseBlueprintProps): void => {
       topImgOffset,
     );
 
-    handleBorderConstraints(canvas$)
-  }, [
-    selectedMarker,
-    bgImg$,
-    canvas$,
-    enableCenterOnSelect,
-  ]);
-  
+    handleBorderConstraints(canvas$);
+  }, [selectedMarker, bgImg$, canvas$, enableCenterOnSelect]);
+
   // handle zoom passed as a parameter
   useEffect(() => {
-
     if (!bgImg$ || !canvas$ || !zoom) {
       return;
     }
@@ -306,15 +266,8 @@ const useBlueprint = (props: UseBlueprintProps): void => {
       );
     }
 
-    handleBorderConstraints(canvas$)
-  }, [
-    canvas$,
-    zoom,
-    bgImg$,
-    enableCenterOnSelect,
-    selectedMarker
-  ]);
-
+    handleBorderConstraints(canvas$);
+  }, [canvas$, zoom, bgImg$, enableCenterOnSelect, selectedMarker]);
 };
 
 function addWalkPathToCanvas(
@@ -332,7 +285,6 @@ function addWalkPathToCanvas(
   if (path$) {
     canvas$.remove(path$);
   }
-
 
   const pathStr = markers.reduce((acc, { x, y }) => {
     return (
@@ -357,7 +309,7 @@ function addMarkersToCanvas(
   canvas$: fabric.Canvas,
   markers: PanoMarker[],
   opts: BlueprintRenderOpts = BLUEPRINT_RENDER_OPTS_INIT_STATE,
-) : fabric.Circle[] {
+): fabric.Circle[] {
   const onMarkerClick = opts?.onMarkerClick;
 
   const markers$ = getFromCanvasCache(canvas$, 'MARKERS') || [];
@@ -418,7 +370,7 @@ function enableCanvasPanning(canvas$: fabric.Canvas) {
   canvas$.on(MOUSE_OUT_EVENT, (e) => {
     //NOTE: this event also fires for objects on the canvas
     //this checks if mouseout event happend for the canvas
-    if( !("nextTarget" in e)){
+    if (!('nextTarget' in e)) {
       isPanning = false;
     }
   });
@@ -456,11 +408,11 @@ function enableCanvasPanning(canvas$: fabric.Canvas) {
   });
 }
 
-function cleanUpZoomEvents(canvas$: fabric.Canvas) : void {
+function cleanUpZoomEvents(canvas$: fabric.Canvas): void {
   canvas$.off(MOUSE_WHEEL_EVENT);
 }
 
-function cleanUpPanEvents(canvas$: fabric.Canvas) : void {
+function cleanUpPanEvents(canvas$: fabric.Canvas): void {
   canvas$.off(MOUSE_DOWN_EVENT);
   canvas$.off(MOUSE_UP_EVENT);
   canvas$.off(MOUSE_MOVE_EVENT);

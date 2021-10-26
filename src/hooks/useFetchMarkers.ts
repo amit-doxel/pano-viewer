@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { PanoMarker } from "../components/Blueprint/models";
-import { useFetchPanoInfo } from "./useFetchPanoInfo";
+import { PanoMarker } from '../components/Blueprint/models';
+import { useFetchPanoInfo } from './useFetchPanoInfo';
 
 interface SceneData {
   id: number;
@@ -8,12 +8,11 @@ interface SceneData {
   mapped_y: number;
 }
 
-
 function fetchMarkers(
   projectId: number,
   dateStr: string,
   buildingName: string,
-  floor: number
+  floor: number,
 ): Promise<SceneData[]> {
   return fetch(
     `http://localhost:3000/api/v2/projects/${projectId}/panoramas/scenes?date=${dateStr}&building_name=${buildingName}&floor=${floor}`,
@@ -25,14 +24,12 @@ function fetchMarkers(
 }
 
 export function useFetchMarkers(projectId: number, dateStr: string) {
-
-  const {building} = useFetchPanoInfo(projectId, dateStr) || {};
-  const {name, floor} = building || {};
+  const { building } = useFetchPanoInfo(projectId, dateStr) || {};
+  const { name, floor } = building || {};
 
   const [markers, setMarkers] = useState<PanoMarker[]>([]);
 
   useEffect(() => {
-
     if (!projectId || !dateStr || !name || !floor) {
       return;
     }
@@ -52,8 +49,8 @@ export function useFetchMarkers(projectId: number, dateStr: string) {
   return markers;
 }
 
-function getPanoMarkers(scenes: SceneData[]) : PanoMarker[] {
-  return scenes.map(({id, mapped_x: x, mapped_y: y}) => {
-    return {id, x, y}
+function getPanoMarkers(scenes: SceneData[]): PanoMarker[] {
+  return scenes.map(({ id, mapped_x: x, mapped_y: y }) => {
+    return { id, x, y };
   });
 }

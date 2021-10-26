@@ -45,9 +45,6 @@ export const useScene = () => {
 function createSphereMesh(texture: any): THREE.Mesh {
   const sphereGeometry = new THREE.SphereGeometry(500, 60, 40);
   sphereGeometry.scale(-1, 1, 1);
-  // const loader = new THREE.TextureLoader();
-  // loader.crossOrigin = 'localhost:3002';
-  // const texture = loader.load(imageUrl);
   const material = new THREE.MeshBasicMaterial({ map: texture });
   const sphereMesh = new THREE.Mesh(sphereGeometry, material);
 

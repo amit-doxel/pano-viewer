@@ -26,7 +26,7 @@ export function useFetchBlueprintImage(projectId: number, dateStr: string) {
         return getImageFromUrl(blueprintURL);
       })
       .then((img: HTMLImageElement) => {
-        setImg(img)
+        setImg(img);
       })
       .catch((err) => {
         console.error('err', err);

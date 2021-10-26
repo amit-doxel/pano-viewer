@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import {View} from './models';
+import { View } from './models';
 
 export interface ZoomMethods {
   zoomInMethod: () => any;

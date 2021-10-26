@@ -9,10 +9,7 @@ export interface PanoInfo {
   survey_date: string;
 }
 
-function fetchPanoInfo(
-  projectId: number,
-  dateStr: string,
-): Promise<PanoInfo> {
+function fetchPanoInfo(projectId: number, dateStr: string): Promise<PanoInfo> {
   return fetch(
     `http://localhost:3000/api/v2/projects/${projectId}/panoramas?date=${dateStr}`,
     {
@@ -28,7 +25,7 @@ export function useFetchPanoInfo(projectId: number, dateStr: string) {
   useEffect(() => {
     fetchPanoInfo(projectId, dateStr)
       .then((panoInfo: PanoInfo) => {
-        setPanoInfo(panoInfo)
+        setPanoInfo(panoInfo);
       })
       .catch((err) => {
         console.error('err', err);

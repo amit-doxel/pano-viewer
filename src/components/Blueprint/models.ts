@@ -14,12 +14,11 @@ export interface PanoMarker {
 type ZoomValue = number;
 export type PointZoom = [ZoomValue, number, number];
 
-
-export type  OnMarkerClick = (marker: PanoMarker) => void;
-export type  OnZoomChanged = (zoom: PointZoom) => void;
+export type OnMarkerClick = (marker: PanoMarker) => void;
+export type OnZoomChanged = (zoom: PointZoom) => void;
 
 export interface BlueprintProps {
-  bgImg : HTMLImageElement;
+  bgImg: HTMLImageElement;
   markers: PanoMarker[];
   selectedMarker?: PanoMarker;
 
@@ -31,7 +30,7 @@ export interface BlueprintProps {
 
   enableInitialZoomForSelectedMarker?: boolean;
 
-  enablePanning ?: boolean;
+  enablePanning?: boolean;
 
   onMarkerClick?: OnMarkerClick;
   onZoomChanged?: OnZoomChanged;

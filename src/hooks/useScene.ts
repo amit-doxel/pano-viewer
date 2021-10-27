@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import * as THREE from 'three';
-
 import { usePanoramaContext } from '../context/PanoramaContext/usePanoramaContext';
 
 const scene = new THREE.Scene();
@@ -13,16 +12,11 @@ const camera = new THREE.PerspectiveCamera(
 
 export const useScene = () => {
   const { currentScene } = usePanoramaContext();
-
   useEffect(() => {
     camera.rotation.y = Math.PI;
     camera.rotation.z = Math.PI;
 
-    const sphere = createSphereMesh(
-      currentScene,
-      // will remove this link and add panoImage when the real API integration will be done
-    );
-
+    const sphere = createSphereMesh(currentScene);
     scene.add(sphere);
   }, [currentScene]);
 

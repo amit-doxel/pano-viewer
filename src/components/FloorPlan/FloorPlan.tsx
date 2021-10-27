@@ -1,13 +1,13 @@
-import { MiniPano } from "../MiniPano/MiniPano";
+import { MiniPano } from '../MiniPano/MiniPano';
 import {
   Blueprint,
   PanoMarker,
   OnMarkerClick,
   OnZoomChanged,
-  PointZoom
+  PointZoom,
 } from '../Blueprint';
 
-interface  FloorPlanProps {
+interface FloorPlanProps {
   bgImg: HTMLImageElement;
   markers: PanoMarker[];
   zoom: PointZoom;
@@ -15,18 +15,11 @@ interface  FloorPlanProps {
   onZoomChanged: OnZoomChanged;
   onMarkerClick: OnMarkerClick;
 
-  selectedMarker ?: PanoMarker;
+  selectedMarker?: PanoMarker;
 }
 
 export const FloorPlan: React.FC<FloorPlanProps> = (props) => {
-
-  const {
-    bgImg,
-    markers,
-    onMarkerClick,
-    zoom,
-    selectedMarker,
-  } = props
+  const { bgImg, markers, onMarkerClick, zoom, selectedMarker } = props;
 
   return (
     <div
@@ -38,9 +31,7 @@ export const FloorPlan: React.FC<FloorPlanProps> = (props) => {
         alignItems: 'center',
       }}
     >
-      <div
-        style={{ width: '90%', height: '80%' }}
-      >
+      <div style={{ width: '90%', height: '80%' }}>
         <Blueprint
           markers={markers}
           selectedMarker={selectedMarker}
@@ -50,7 +41,15 @@ export const FloorPlan: React.FC<FloorPlanProps> = (props) => {
           bgImg={bgImg}
           zoom={zoom}
         />
-        <div style={{position: 'absolute', width: '300px', height: '100px', right: '30px', top: '25%'}}>
+        <div
+          style={{
+            position: 'absolute',
+            width: '300px',
+            height: '100px',
+            right: '30px',
+            top: '25%',
+          }}
+        >
           <MiniPano />
         </div>
       </div>

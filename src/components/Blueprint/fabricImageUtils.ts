@@ -1,7 +1,7 @@
-import {fabric} from 'fabric';
-import {ImgBlueprintRenderOpts} from './models';
+import { fabric } from 'fabric';
+import { ImgBlueprintRenderOpts } from './models';
 
-export function isImagedFetched(img$: fabric.Image) : boolean {
+export function isImagedFetched(img$: fabric.Image): boolean {
   return img$.get('width') !== 0 && img$.get('height') !== 0;
 }
 
@@ -24,7 +24,9 @@ export function getFabricImageScaleFactor(img$: fabric.Image) {
   );
 }
 
-export function getBlueprintRenderOptsFromImg(img$: fabric.Image) : ImgBlueprintRenderOpts {
+export function getBlueprintRenderOptsFromImg(
+  img$: fabric.Image,
+): ImgBlueprintRenderOpts {
   const imgScaleFactor = getFabricImageScaleFactor(img$);
   const topImgOffset = img$.get('top') || 0;
   const leftImgOffset = img$.get('left') || 0;
@@ -53,7 +55,6 @@ export function resizeOffsetBlueprintImage(
   containerWidth: number,
   containerHeight: number,
 ): fabric.Image {
-
   const imgWidth = img$.get('width') || 1;
   const imgHeight = img$.get('height') || 1;
 
@@ -70,11 +71,10 @@ export function resizeOffsetBlueprintImage(
 
     img$.set({ top: topImgOffset });
   } else {
-
     img$.scaleToHeight(containerHeight);
 
-    const widthToHeightRatio = imgWidth / imgHeight ;
-    const scaledImgWidth= containerHeight * widthToHeightRatio;
+    const widthToHeightRatio = imgWidth / imgHeight;
+    const scaledImgWidth = containerHeight * widthToHeightRatio;
 
     const leftImgOffset = (containerWidth - scaledImgWidth) / 2;
 
@@ -84,30 +84,24 @@ export function resizeOffsetBlueprintImage(
   return img$;
 }
 
-export function getImageFromUrl(
-  imgUrl: string
-) : Promise<HTMLImageElement> {
-  return getFabricImageFromUrl(imgUrl)
-    .then((img$) => {
-      return img$.getElement() as HTMLImageElement;
-    });
+export function getImageFromUrl(imgUrl: string): Promise<HTMLImageElement> {
+  return getFabricImageFromUrl(imgUrl).then((img$) => {
+    return img$.getElement() as HTMLImageElement;
+  });
 }
 
-export function getFabricImageFromUrl(
-  imgUrl: string
-) : Promise<fabric.Image> {
+export function getFabricImageFromUrl(imgUrl: string): Promise<fabric.Image> {
   return new Promise((res, rej) => {
-    fabric.Image.fromURL(
-      imgUrl,
-      (img$: fabric.Image) => {
-
-        if (isImagedFetched(img$)) {
-          res(img$);
-        } else {
-          rej(new Error('Image.fromURL: Could not fetch blueprint image. Check network tab'));
-        }
-
+    fabric.Image.fromURL(imgUrl, (img$: fabric.Image) => {
+      if (isImagedFetched(img$)) {
+        res(img$);
+      } else {
+        rej(
+          new Error(
+            'Image.fromURL: Could not fetch blueprint image. Check network tab',
+          ),
+        );
       }
-    )
+    });
   });
 }

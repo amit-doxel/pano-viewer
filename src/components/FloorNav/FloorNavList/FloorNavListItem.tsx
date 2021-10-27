@@ -7,29 +7,23 @@ import { useFloorNavContext } from '../../../context/FloorNavContext/useFloorNav
 import './styles.css';
 
 export const FloorNavListItem: React.FC<FloorDataType> = (floor) => {
-  const { currentScene, setCurrentFloor, setCurrentScene } =
-    usePanoramaContext();
+  const { setFloorNav } = useFloorNavContext();
 
-  const { floorNav, setFloorNav } = useFloorNavContext();
-
-  const changeFloorAndScene = (floor_name: string) => {
-    setCurrentFloor(floor_name);
-    setFloorNav(!floorNav);
-    if (currentScene === 'pano_image/first_image.jpeg') {
-      setCurrentScene('pano_image/second_image.jpeg');
+  const { currentScene, setCurrentScene } = usePanoramaContext();
+  const changeScene = () => {
+    if (currentScene === 'pano-image/R0140118.JPG') {
+      setCurrentScene('pano-image/R0140102.JPG');
+      setFloorNav(false);
     } else {
-      setCurrentScene('pano_image/first_image.jpeg');
+      setCurrentScene('pano-image/R0140118.JPG');
+      setFloorNav(false);
     }
   };
 
   return (
     <div
-      className={floor.scenes === 0 ? 'disabled-nav-item' : 'nav-item'}
-      onClick={
-        floor.scenes !== 0
-          ? () => changeFloorAndScene(floor.floor_name)
-          : undefined
-      }
+      className={floor.scenes === 0 ? 'disabled-nav-item' : 'floor-nav-item'}
+      onClick={() => changeScene()}
     >
       {floor.floor_name}
     </div>

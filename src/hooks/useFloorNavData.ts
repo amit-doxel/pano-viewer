@@ -4,6 +4,8 @@ import { getData } from '../utils/get-data';
 export interface FloorDataType {
   id: number;
   floor_name: string;
+  floor: number;
+  sceneId: number;
   scenes: number;
 }
 

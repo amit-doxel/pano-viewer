@@ -1,4 +1,4 @@
-export enum View  {
+export enum View {
   SINGLE_PANO,
-  FLOORPLAN
+  FLOORPLAN,
 }

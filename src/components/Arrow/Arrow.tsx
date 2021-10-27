@@ -4,22 +4,20 @@ import './styles.css';
 
 export const Arrow: React.FC = () => {
   const { currentScene, setCurrentScene } = usePanoramaContext();
-
-  const changeFloorAndScene = () => {
-    if (currentScene === 'pano_image/first_image.jpeg') {
-      setCurrentScene('pano_image/second_image.jpg');
+  const changeScene = () => {
+    if (currentScene === 'pano-image/R0140118.JPG') {
+      setCurrentScene('pano-image/R0140102.JPG');
     } else {
-      setCurrentScene('pano_image/first_image.jpeg');
+      setCurrentScene('pano-image/R0140118.JPG');
     }
   };
-
   return (
     <div className='arrow-wrapper'>
       <div className='arrow-theme'>
-        <div onClick={() => changeFloorAndScene()}>
+        <div onClick={() => changeScene()}>
           <img src='/assets/icons/left-arrow.svg' alt='arrow-icon'></img>
         </div>
-        <div onClick={() => changeFloorAndScene()}>
+        <div onClick={() => changeScene()}>
           <img src='/assets/icons/right-arrow.svg' alt='arrow-icon'></img>
         </div>
       </div>

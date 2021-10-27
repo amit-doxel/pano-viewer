@@ -1,4 +1,5 @@
 import React from 'react';
+import { CalenderPicker } from '../CalenderPicker';
 
 import { ZoomBar } from '../ZoomBar';
 import './styles.css';
@@ -11,6 +12,7 @@ export interface BottomBarProp {
 export const BottomBar: React.FC<BottomBarProp> = ({ zoomIn, zoomOut }) => {
   return (
     <div className='bottom-wrapper'>
+      <CalenderPicker/>
       <ZoomBar zoomIn={zoomIn} zoomOut={zoomOut}></ZoomBar>
     </div>
   );

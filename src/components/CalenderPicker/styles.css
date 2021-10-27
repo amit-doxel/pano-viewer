@@ -1,0 +1,11 @@
+
+.calender-picker {
+  position: fixed;
+  left: 45%;
+  bottom: 0px;
+  padding: 10px;
+}
+
+.calender-picker span{
+  padding: 0 10px;
+}

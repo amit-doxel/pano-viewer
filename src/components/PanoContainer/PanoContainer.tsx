@@ -1,33 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
-import { useScene, useFetchMarkers } from '../../hooks';
-
+import { useScene } from '../../hooks';
 import { useViewContext } from '../../context/ViewContext';
 import { ThreeCanvas } from '../ThreeCanvas';
 import { Arrow } from '../Arrow';
 import { MiniMap } from '../MiniMap';
 import { BottomBar } from '../BottomBar';
 
-import { useFetchBlueprintImage } from '../../hooks/useFetchBlueprintImage';
-
-import { PanoMarker } from '../Blueprint';
 import { zoomInFunction, zoomOutFunction } from '../../utils/zoom';
-
-const PROJECT_ID = 20;
-const DATE_STR = '2021-05-14';
+import { usePanoramaContext } from '../../context/PanoramaContext/usePanoramaContext';
 
 export const PanoContainer: React.FC = () => {
   const { scene, camera } = useScene();
-  const { zoomMethods, setZoomMethods } = useViewContext();
+  const { markers, selectedMarker, setSelectedMarker } = usePanoramaContext();
+
+  const { zoomMethods, setZoomMethods, blueprintImg } = useViewContext();
   const { zoomInMethod, zoomOutMethod } = zoomMethods;
-
-  const img = useFetchBlueprintImage(PROJECT_ID, DATE_STR);
-
-  const markers = useFetchMarkers(PROJECT_ID, DATE_STR);
-
-  const [selectedMarker, setSelectedMarker] = useState<
-    PanoMarker | undefined
-  >();
 
   useEffect(() => {
     setZoomMethods({
@@ -36,21 +24,13 @@ export const PanoContainer: React.FC = () => {
     });
   }, []);
 
-  useEffect(() => {
-    if (!markers.length) {
-      return;
-    }
-
-    setSelectedMarker(markers[0]);
-  }, [markers]);
-
   return (
     <>
       <ThreeCanvas scene={scene} camera={camera} />
       <Arrow />
-      {img != null && (
+      {blueprintImg != null && (
         <MiniMap
-          bgImg={img}
+          bgImg={blueprintImg}
           markers={markers}
           selectedMarker={selectedMarker}
           onMarkerClick={(marker) => setSelectedMarker(marker)}

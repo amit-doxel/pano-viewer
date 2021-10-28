@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
-import { PanoramaContext } from './PanoramaContext';
+import { PanoramaContext, PanoramaContextValue } from './PanoramaContext';
 
 export function usePanoramaContext() {
-  return useContext(PanoramaContext);
+  return useContext<PanoramaContextValue>(PanoramaContext);
 }

@@ -1,4 +1,5 @@
 import { createContext } from 'react';
+import { PanoMarker } from '../../components/Blueprint/models';
 
 export type PanoramaContextValue = {
   currentFloor: number;
@@ -11,6 +12,11 @@ export type PanoramaContextValue = {
   setProjectId: (value: number) => any;
   setBuildingName: (value: string) => any;
   setSceneId: (Value: number) => any;
+  markers: PanoMarker[];
+  selectedMarker?: PanoMarker;
+  setSelectedMarker: (pm: PanoMarker) => void;
+  selectNextMarker: () => void;
+  selectPrevMarker: () => void;
 };
 
 export const PanoramaContext = createContext({
@@ -24,4 +30,8 @@ export const PanoramaContext = createContext({
   setCurrentScene: (value: string) => null,
   setBuildingName: (value: string) => null,
   setSceneId: (value: number) => null,
+  markers: [] as PanoMarker[],
+  setSelectedMarker: (pm: PanoMarker) => {},
+  selectNextMarker: () => {},
+  selectPrevMarker: () => {},
 });

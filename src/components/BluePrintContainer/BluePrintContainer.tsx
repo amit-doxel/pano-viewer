@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { FloorPlan } from '../FloorPlan';
 import { BottomBar } from '../BottomBar';
@@ -6,12 +6,11 @@ import { BottomBar } from '../BottomBar';
 import { useViewContext } from '../../context/ViewContext';
 import { useFloorPlanZoom } from '../../hooks';
 import { usePanoramaContext } from '../../context/PanoramaContext/usePanoramaContext';
-import { View } from '../../context/ViewContext/models';
 
 export const BluePrintContainer: React.FC = () => {
-  const { view, blueprintImg, zoomMethods } = useViewContext();
+  const { view, blueprintImg, zoomMethods, setZoomMethods } = useViewContext();
 
-  const { markers, selectedMarker, setSelectedMarker } = usePanoramaContext();
+  const { markers,  selectedMarker, setSelectedMarker } = usePanoramaContext();
 
   const { zoomInMethod, zoomOutMethod } = zoomMethods;
   const {
@@ -21,15 +20,12 @@ export const BluePrintContainer: React.FC = () => {
     zoomOutMethod: floorPlanZoomOutFn,
   } = useFloorPlanZoom(view);
 
-  let localZoomInFn, localZoomOutFn;
-
-  if (view === View.FLOORPLAN) {
-    localZoomInFn = floorPlanZoomInFn;
-    localZoomOutFn = floorPlanZoomOutFn;
-  } else {
-    localZoomInFn = zoomInMethod;
-    localZoomOutFn = zoomOutMethod;
-  }
+  useEffect(() => {
+    setZoomMethods({
+      zoomInMethod: () => floorPlanZoomInFn,
+      zoomOutMethod: () => floorPlanZoomOutFn,
+    });
+  }, []);
 
   if (blueprintImg) {
     return (
@@ -42,7 +38,7 @@ export const BluePrintContainer: React.FC = () => {
           zoom={floorPlanZoom}
           onZoomChanged={onFloorPlanZoomChanged}
         />
-        <BottomBar zoomIn={localZoomInFn} zoomOut={localZoomOutFn} />
+        <BottomBar zoomIn={zoomInMethod} zoomOut={zoomOutMethod} />
       </>
     );
   } else {

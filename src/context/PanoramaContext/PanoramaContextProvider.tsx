@@ -40,6 +40,24 @@ export const PanoramaContextProvider: React.FC = ({ children }) => {
     });
   }, [selectedMarker]);
 
+  const selectNextMarker = () => {
+    if (!selectedMarker) {
+      return;
+    }
+    const idx = markers.indexOf(selectedMarker);
+    const nextIdx = idx + 1 < markers.length - 1 ? idx + 1 : 0;
+    setSelectedMarker(markers[nextIdx]);
+  }
+
+  const selectPrevMarker =  () => {
+    if (!selectedMarker) {
+      return;
+    }
+    const idx = markers.indexOf(selectedMarker);
+    const nextIdx = idx - 1 >= 0 ? idx - 1 : markers.length - 1;
+    setSelectedMarker(markers[nextIdx]);
+  }
+
   const context: PanoramaContextValue = {
     currentFloor: currentFloor,
     currentScene: currentScene,
@@ -51,25 +69,11 @@ export const PanoramaContextProvider: React.FC = ({ children }) => {
     setProjectId: setProjectId,
     setBuildingName: setBuildingName,
     setSceneId: setSceneId,
-    markers,
-    selectedMarker,
-    setSelectedMarker,
-    selectNextMarker: () => {
-      if (!selectedMarker) {
-        return;
-      }
-      const idx = markers.indexOf(selectedMarker);
-      const nextIdx = idx + 1 < markers.length - 1 ? idx + 1 : 0;
-      setSelectedMarker(markers[nextIdx]);
-    },
-    selectPrevMarker: () => {
-      if (!selectedMarker) {
-        return;
-      }
-      const idx = markers.indexOf(selectedMarker);
-      const nextIdx = idx - 1 >= 0 ? idx - 1 : markers.length - 1;
-      setSelectedMarker(markers[nextIdx]);
-    },
+    markers: markers,
+    selectedMarker: selectedMarker,
+    setSelectedMarker: setSelectedMarker,
+    selectNextMarker: selectNextMarker,
+    selectPrevMarker: selectPrevMarker
   };
 
   return (

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 export function fetchPanoImage(
   projectId: number,
-  sceneId: number,
+  sceneId: number | undefined,
 ): Promise<{ link: string }> {
   return fetch(
     `http://localhost:3000/api/v2/projects/${projectId}/panoramas/scene_link?id=${sceneId}`,
@@ -13,7 +13,7 @@ export function fetchPanoImage(
   ).then((res) => res.json());
 }
 
-function useFetchPanoImage(projectId: number, sceneId: number) {
+export function useFetchPanoImage(projectId: number, sceneId: number) {
   const [panoImage, setPanoImage] = useState<string>('');
   const [loading, setLoading] = useState(true);
 

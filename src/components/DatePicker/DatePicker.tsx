@@ -1,53 +1,65 @@
 import * as React from 'react';
+
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import StaticDatePicker from '@mui/lab/StaticDatePicker';
-import { useDatePickerData } from '../../hooks';
+import { ThemeProvider } from '@emotion/react';
 import { createTheme } from '@material-ui/core/styles';
 
-import './styles.css';
+import { useDatePickerData } from '../../hooks';
 import { useDatePickerContext } from '../../context/DatePickerContext/useDatePickerContext';
-import { ThemeProvider } from '@emotion/react';
+import { usePanoramaContext } from '../../context/PanoramaContext/usePanoramaContext';
+
+import './styles.css';
 
 export function PanoDatePicker() {
   const theme = createTheme({
     palette: {
-      type: "dark",
+      type: 'dark',
       primary: {
-        main: "#ff8000"
-      }
+        main: '#ff8000',
+      },
     },
   });
   const [value, setValue] = React.useState<Date | null>(new Date());
 
   const { datePicker } = useDatePickerContext();
 
-  const { datePickerData } = useDatePickerData()
+  const { currentScene, setCurrentScene } = usePanoramaContext();
+
+  const { datePickerData } = useDatePickerData();
+
+  const onDateChange = (newValue: Date | null) => {
+    if (currentScene === 'pano-image/R0140118.JPG') {
+      setCurrentScene('pano-image/R0140102.JPG');
+    } else {
+      setCurrentScene('pano-image/R0140118.JPG');
+    }
+    setValue(newValue);
+  }
 
   const disableDateWithoutScenes = (date: Date) => {
-    for(let i=0;i<datePickerData.length;i++){
-      if(new Date(datePickerData[i].date)===date){
-        if(datePickerData[i].scenes!==0) return false
+    for (let i = 0; i < datePickerData.length; i++) {
+      if (new Date(datePickerData[i].date).getTime() === date.getTime()) {
+        if (datePickerData[i].scenes !== 0) return false;
       }
     }
-    return true
-  }
+    return true;
+  };
   if (!datePicker) return null;
 
   return (
     <ThemeProvider theme={theme}>
-      <div className='pano-date-picker' color="primary">
+      <div className='pano-date-picker' color='primary'>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <StaticDatePicker
-            minDate={new Date('11/01/2021')}
-            maxDate={new Date('11/30/2021')}
+            minDate={new Date('10/01/2021')}
+            maxDate={new Date('10/30/2021')}
             shouldDisableDate={disableDateWithoutScenes}
             displayStaticWrapperAs='desktop'
             value={value}
-            onChange={(newValue: Date | null) => {
-              setValue(newValue);
-            }}
+            onChange={(newValue: Date | null) => onDateChange(newValue)}
             renderInput={(params: any) => <TextField {...params} />}
           />
         </LocalizationProvider>

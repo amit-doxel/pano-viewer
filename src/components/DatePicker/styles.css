@@ -3,3 +3,7 @@
   left: 42%;
   bottom: 50px;
 }
+
+.MuiCalendarPicker-root {
+  color: #fff;
+}

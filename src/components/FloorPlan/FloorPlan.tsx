@@ -19,7 +19,8 @@ interface FloorPlanProps {
 }
 
 export const FloorPlan: React.FC<FloorPlanProps> = (props) => {
-  const { bgImg, markers, onMarkerClick, zoom, selectedMarker } = props;
+  const { bgImg, markers, onMarkerClick, zoom, selectedMarker, onZoomChanged } =
+    props;
 
   return (
     <div
@@ -38,6 +39,7 @@ export const FloorPlan: React.FC<FloorPlanProps> = (props) => {
           selectionType={'inner_circle'}
           enablePanning={true}
           onMarkerClick={onMarkerClick}
+          onZoomChanged={onZoomChanged}
           bgImg={bgImg}
           zoom={zoom}
         />

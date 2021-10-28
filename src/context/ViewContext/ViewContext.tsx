@@ -11,6 +11,7 @@ export type ViewContextValue = {
   zoomMethods: ZoomMethods;
   setZoomMethods: (value: ZoomMethods) => any;
   setView: (view: View) => void;
+  blueprintImg?: HTMLImageElement;
 };
 
 export const ViewContext = createContext({

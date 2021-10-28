@@ -35,4 +35,3 @@ function useFetchPanoImage(projectId: number, sceneId: number) {
   };
 }
 
-export default useFetchPanoImage;

@@ -4,7 +4,6 @@ import { FloorPlan } from '../FloorPlan';
 import { BottomBar } from '../BottomBar';
 
 import { useViewContext } from '../../context/ViewContext';
-
 import { useFloorPlanZoom } from '../../hooks';
 import { usePanoramaContext } from '../../context/PanoramaContext/usePanoramaContext';
 import { View } from '../../context/ViewContext/models';
@@ -15,7 +14,6 @@ export const BluePrintContainer: React.FC = () => {
   const { markers, selectedMarker, setSelectedMarker } = usePanoramaContext();
 
   const { zoomInMethod, zoomOutMethod } = zoomMethods;
-
   const {
     zoom: floorPlanZoom,
     onZoomChanged: onFloorPlanZoomChanged,

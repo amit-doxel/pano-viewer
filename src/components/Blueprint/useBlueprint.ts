@@ -226,7 +226,6 @@ const useBlueprint = (props: UseBlueprintProps): void => {
 
     selectMarker(canvas$, selectedMarker, blueprintRenderOpts);
   }, [selectedMarker, bgImg$, canvas$, selectionType]);
-
   //handle centering viewport around marker on selection change if enabled
   useEffect(() => {
     if (!selectedMarker || !bgImg$ || !canvas$ || !enableCenterOnSelect) {

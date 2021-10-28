@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 
 import { useScene } from '../../hooks';
-
 import { useViewContext } from '../../context/ViewContext';
 import { ThreeCanvas } from '../ThreeCanvas';
 import { Arrow } from '../Arrow';

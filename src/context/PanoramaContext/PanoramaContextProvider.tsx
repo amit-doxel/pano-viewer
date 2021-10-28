@@ -13,7 +13,6 @@ export const PanoramaContextProvider: React.FC = ({ children }) => {
   const [buildingName, setBuildingName] = useState('Prologis+Redlands');
   const [sceneId, setSceneId] = useState(387662);
   const [currentScene, setCurrentScene] = useState('pano-image/R0140102.JPG');
-
   const [selectedMarker, setSelectedMarker] = useState<
     PanoMarker | undefined
   >();

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
-import { ViewContext } from './ViewContext';
+import { ViewContext, ViewContextValue } from './ViewContext';
 
 export function useViewContext() {
-  return useContext(ViewContext);
+  return useContext<ViewContextValue>(ViewContext);
 }

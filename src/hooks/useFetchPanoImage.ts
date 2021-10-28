@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function fetchPanoImage(
+export function fetchPanoImage(
   projectId: number,
   sceneId: number,
 ): Promise<{ link: string }> {

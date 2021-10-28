@@ -1,4 +1,3 @@
-
 .calender-picker {
   position: fixed;
   left: 45%;
@@ -6,6 +5,7 @@
   padding: 10px;
 }
 
-.calender-picker span{
-  padding: 0 10px;
+.calender-picker div {
+  padding: 0 5px;
+  cursor: pointer;
 }

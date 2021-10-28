@@ -12,7 +12,7 @@ export interface BottomBarProp {
 export const BottomBar: React.FC<BottomBarProp> = ({ zoomIn, zoomOut }) => {
   return (
     <div className='bottom-wrapper'>
-      <CalenderPicker/>
+      <CalenderPicker />
       <ZoomBar zoomIn={zoomIn} zoomOut={zoomOut}></ZoomBar>
     </div>
   );

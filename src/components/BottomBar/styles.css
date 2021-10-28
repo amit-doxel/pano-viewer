@@ -35,7 +35,7 @@
 }
 
 .bottom-wrapper .bar-theme {
-  display: inline-block;
+  display: flex;
 }
 
 .bottom-wrapper .bar-theme .button {

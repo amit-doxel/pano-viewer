@@ -6,6 +6,7 @@ import { FloorNav } from '../FloorNav';
 
 import { useCountRenders } from '../../hooks';
 import { PanoVisContainer } from '../PanoVisContainer/PanoVisContainer';
+import { DatePickerContextProvider } from '../../context/DatePickerContext/DatePickerContextProvider';
 
 // NOTES:
 // 1. Should have a PanoVisContainer component that can hold
@@ -18,11 +19,11 @@ export const PanoViewer: React.FC = () => {
   useCountRenders('PanoViewer');
 
   return (
-    <>
+    <DatePickerContextProvider>
       <Header />
       <PanoVisContainer />
       <LeftBar />
       <FloorNav />
-    </>
+    </DatePickerContextProvider>
   );
 };

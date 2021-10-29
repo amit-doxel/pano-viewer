@@ -15,7 +15,7 @@ export const CalenderPicker: React.FC = () => {
         <div>
           <img src='assets/icons/left.svg' alt='left-arrow' />
         </div>
-        <div onClick={() => setDatePicker(!datePicker)}>Feb 1 2021</div>
+        <div onClick={() => setDatePicker(!datePicker)}>Oct 29 2021</div>
         <div>
           <img src='assets/icons/right.svg' alt='right-arrow' />
         </div>

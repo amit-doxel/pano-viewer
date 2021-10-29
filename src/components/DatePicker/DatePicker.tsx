@@ -25,10 +25,8 @@ export function PanoDatePicker() {
   const [value, setValue] = React.useState<Date | null>(new Date());
 
   const { datePicker } = useDatePickerContext();
-
   const { currentScene, setCurrentScene } = usePanoramaContext();
-
-  const { datePickerData } = useDatePickerData();
+  const { availablePanos } = useDatePickerData();
 
   const onDateChange = (newValue: Date | null) => {
     if (currentScene === 'pano-image/R0140118.JPG') {
@@ -36,17 +34,20 @@ export function PanoDatePicker() {
     } else {
       setCurrentScene('pano-image/R0140118.JPG');
     }
+
     setValue(newValue);
-  }
+  };
 
   const disableDateWithoutScenes = (date: Date) => {
-    for (let i = 0; i < datePickerData.length; i++) {
-      if (new Date(datePickerData[i].date).getTime() === date.getTime()) {
-        if (datePickerData[i].scenes !== 0) return false;
+    for (const availablePano of availablePanos) {
+      if (new Date(availablePano.date).getTime() === date.getTime()) {
+        if (availablePano.scenes !== 0) return false;
       }
     }
+
     return true;
   };
+
   if (!datePicker) return null;
 
   return (

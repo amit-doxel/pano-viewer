@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+
 import { getData } from '../utils/get-data';
 
 export interface DatePickerType {
@@ -8,7 +9,7 @@ export interface DatePickerType {
 }
 
 export function useDatePickerData() {
-  const [datePickerData, setDatePickerData] = useState<DatePickerType[]>([]);
+  const [availablePanos, setAvailablePanos] = useState<DatePickerType[]>([]);
 
   useEffect(() => {
     fetchData();
@@ -16,13 +17,13 @@ export function useDatePickerData() {
   const fetchData = async () => {
     try {
       const response = await getData('date_picker.json', 'json');
-      setDatePickerData(response);
+      setAvailablePanos(response);
     } catch (error) {
       console.error(error);
     }
   };
 
   return {
-    datePickerData,
+    availablePanos,
   };
 }

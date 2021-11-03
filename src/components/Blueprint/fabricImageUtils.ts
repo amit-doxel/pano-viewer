@@ -58,11 +58,10 @@ export function resizeOffsetBlueprintImage(
   const imgWidth = img$.get('width') || 1;
   const imgHeight = img$.get('height') || 1;
 
-  const widthToHeightRatio = imgWidth / imgHeight;
+  const shouldScaleToWidth =
+    containerHeight / imgHeight > containerWidth / imgWidth;
 
-  const isLandscape = widthToHeightRatio > 1;
-
-  if (isLandscape) {
+  if (shouldScaleToWidth) {
     img$.scaleToWidth(containerWidth);
 
     const heightToWidthRatio = imgHeight / imgWidth;

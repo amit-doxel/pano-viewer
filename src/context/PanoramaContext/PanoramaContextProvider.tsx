@@ -1,74 +1,106 @@
 import React, { useState, useEffect } from 'react';
 
-import { useFetchMarkers, fetchPanoImage } from '../../hooks';
+import {
+  useFetchPanoramasForScanDate,
+  useFetchFloors,
+  useFetchGridPanos,
+  useFetchPanoImage,
+} from '../../hooks';
 import { PanoramaContextValue, PanoramaContext } from './PanoramaContext';
-import { PanoMarker } from '../../components/Blueprint/models';
+import { Panorama } from '../../models/panorama';
+import { Floor } from '../../models/floor';
+import { getImageFromUrl } from '../../components/Blueprint';
 
-const PROJECT_ID = 20;
-const DATE_STR = '2021-05-14';
+const PROJECT_ID = 17;
 
 export const PanoramaContextProvider: React.FC = ({ children }) => {
-  const [currentFloor, setCurrentFloor] = useState(1);
-  const [projectId, setProjectId] = useState(17);
+  const [projectId, setProjectId] = useState(PROJECT_ID);
   const [buildingName, setBuildingName] = useState('Prologis+Redlands');
-  const [sceneId, setSceneId] = useState(387662);
-  const [currentScene, setCurrentScene] = useState('pano-image/R0140102.JPG');
-  const [selectedMarker, setSelectedMarker] = useState<
-    PanoMarker | undefined
+  const [selectedPanorama, setSelectedPanorama] = useState<
+    Panorama | undefined
+  >();
+  const [selectedFloor, setSelectedFloor] = useState<Floor | undefined>();
+  const [selectedGridId, setSelectedGridId] = useState<number | undefined>();
+  const [selectedDateStr, setSelectedDateStr] = useState<string | undefined>();
+  const [blueprintImg, setBlueprintImg] = useState<
+    HTMLImageElement | undefined
   >();
 
-  const markers = useFetchMarkers(PROJECT_ID, DATE_STR);
+  const floors = useFetchFloors(projectId);
 
-  // TODO: useFetchMarkers should return more information, that
-  // helps to initialize selectedMarker
+  const panoramas = useFetchPanoramasForScanDate(projectId, selectedDateStr);
+  const gridPanoramas = useFetchGridPanos(projectId, selectedGridId);
+
+  const panoId = selectedPanorama && selectedPanorama.id;
+  const currentScene = useFetchPanoImage(projectId, panoId);
+
   useEffect(() => {
-    if (!markers.length) {
+    if (!floors.length) {
+      return;
+    }
+    const floor = floors[0];
+    setSelectedFloor(floor);
+  }, [floors, setSelectedFloor]);
+
+  useEffect(() => {
+    if (!selectedFloor) {
       return;
     }
 
-    setSelectedMarker(markers[0]);
-  }, [markers, setSelectedMarker]);
+    const { blueprintSignedUrl } = selectedFloor;
+    const { date } = selectedFloor.scans[0];
+
+    setSelectedDateStr(date);
+
+    getImageFromUrl(blueprintSignedUrl)
+      .then((img: HTMLImageElement) => {
+        setBlueprintImg(img);
+      })
+      .catch((err) => {
+        console.error('getImageFromUrl: could not get img from url', err);
+      });
+  }, [selectedFloor, setSelectedDateStr]);
 
   useEffect(() => {
-    if (!selectedMarker) {
+    if (!panoramas.length) {
       return;
     }
-
-    fetchPanoImage(PROJECT_ID, selectedMarker.id).then(({ link }) => {
-      setCurrentScene(link);
-      console.log('panoImage', link);
-    });
-  }, [selectedMarker]);
+    const panorama = panoramas[0];
+    setSelectedPanorama(panorama);
+    setSelectedGridId(panorama.gridId);
+  }, [panoramas, setSelectedPanorama]);
 
   const context: PanoramaContextValue = {
-    currentFloor: currentFloor,
     currentScene: currentScene,
     projectId: projectId,
     buildingName: buildingName,
-    sceneId: sceneId,
-    setCurrentFloor: setCurrentFloor,
-    setCurrentScene: setCurrentScene,
     setProjectId: setProjectId,
     setBuildingName: setBuildingName,
-    setSceneId: setSceneId,
-    markers,
-    selectedMarker,
-    setSelectedMarker,
-    selectNextMarker: () => {
-      if (!selectedMarker) {
+    panoramas,
+    floors,
+    selectedFloor,
+    blueprintImg,
+    gridPanoramas,
+    selectedPanorama,
+    selectedDateStr,
+    setSelectedDateStr,
+    setSelectedPanorama,
+    setSelectedFloor,
+    selectNextPanorama: () => {
+      if (!selectedPanorama) {
         return;
       }
-      const idx = markers.indexOf(selectedMarker);
-      const nextIdx = idx + 1 < markers.length - 1 ? idx + 1 : 0;
-      setSelectedMarker(markers[nextIdx]);
+      const idx = panoramas.indexOf(selectedPanorama);
+      const nextIdx = idx + 1 < panoramas.length ? idx + 1 : 0;
+      setSelectedPanorama(panoramas[nextIdx]);
     },
-    selectPrevMarker: () => {
-      if (!selectedMarker) {
+    selectPrevPanorama: () => {
+      if (!selectedPanorama) {
         return;
       }
-      const idx = markers.indexOf(selectedMarker);
-      const nextIdx = idx - 1 >= 0 ? idx - 1 : markers.length - 1;
-      setSelectedMarker(markers[nextIdx]);
+      const idx = panoramas.indexOf(selectedPanorama);
+      const nextIdx = idx - 1 >= 0 ? idx - 1 : panoramas.length - 1;
+      setSelectedPanorama(panoramas[nextIdx]);
     },
   };
 

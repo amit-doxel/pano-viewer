@@ -13,6 +13,9 @@ const camera = new THREE.PerspectiveCamera(
 export const useScene = () => {
   const { currentScene } = usePanoramaContext();
   useEffect(() => {
+    if (!currentScene) {
+      return;
+    }
     camera.rotation.y = Math.PI;
     camera.rotation.z = Math.PI;
 

@@ -1,0 +1,49 @@
+[
+  {
+    "id": 10,
+    "name": "Floor 1",
+    "blueprintSignedUrl": "string",
+    "scans": [{
+      "date": "2021-02-01"
+    },{
+      "date": "2021-02-03"
+    },{
+      "date": "2021-02-04"
+    },{
+      "date": "2021-02-05"
+    },{
+      "date": "2021-02-08"
+    }]
+  },
+  {
+    "id": "20",
+    "name": "Floor 2",
+    "blueprintSignedUrl": "string",
+    "scans": [{
+      "date": "2021-02-01"
+    },{
+      "date": "2021-02-03"
+    },{
+      "date": "2021-02-04"
+    },{
+      "date": "2021-02-05"
+    },{
+      "date": "2021-02-08"
+    }]
+  },
+  {
+    "id": "30",
+    "name": "Floor 3",
+    "blueprintSignedUrl": "string",
+    "scans": [{
+      "date": "2021-02-01"
+    },{
+      "date": "2021-02-03"
+    },{
+      "date": "2021-02-04"
+    },{
+      "date": "2021-02-05"
+    },{
+      "date": "2021-02-08"
+    }]
+  }]

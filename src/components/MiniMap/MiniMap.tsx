@@ -25,6 +25,20 @@ export const MiniMap: React.FC<FloorPlanProps> = (props) => {
     setZoom(newZoom);
   }
 
+  const imgSrc = `/assets/icons/${isCollapsed ? 'up' : 'down'}.svg`;
+
+  const header = (
+    <div
+      onClick={() => setIsCollapsed(!isCollapsed)}
+      style={{ padding: '5px 0', background: 'black', height: '18px' }}
+    >
+      <span style={{ color: 'white', float: 'left' }}>Map</span>
+      <div style={{ float: 'right', paddingRight: '5px' }}>
+        <img src={imgSrc} alt='collapse-icon'></img>
+      </div>
+    </div>
+  );
+
   const body = (
     <div
       style={{
@@ -60,7 +74,7 @@ export const MiniMap: React.FC<FloorPlanProps> = (props) => {
         height: '18px',
       }}
     >
-      <span>{zoomDisplay}</span>
+      <span style={{ float: 'left' }}>{zoomDisplay}</span>
       <div style={{ float: 'right', display: 'flex', paddingRight: '5px' }}>
         <img
           onClick={() => zoom != null && setZoom(getZoomOutValue(zoom))}
@@ -77,8 +91,6 @@ export const MiniMap: React.FC<FloorPlanProps> = (props) => {
     </div>
   );
 
-  const imgSrc = `/assets/icons/${isCollapsed ? 'up' : 'down'}.svg`;
-
   return (
     <div
       className='mini-map'
@@ -92,15 +104,7 @@ export const MiniMap: React.FC<FloorPlanProps> = (props) => {
         background: 'black',
       }}
     >
-      <div
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        style={{ padding: '5px 0', background: 'black' }}
-      >
-        <span style={{ color: 'white' }}>Map</span>
-        <div style={{ float: 'right', paddingRight: '5px' }}>
-          <img src={imgSrc} alt='collapse-icon'></img>
-        </div>
-      </div>
+      {header}
       {!isCollapsed && body}
       {!isCollapsed && footer}
     </div>

@@ -19,10 +19,14 @@ function fetchPanoInfo(projectId: number, dateStr: string): Promise<PanoInfo> {
   ).then((res) => res.json());
 }
 
-export function useFetchPanoInfo(projectId: number, dateStr: string) {
+export function useFetchPanoInfo(projectId?: number, dateStr?: string) {
   const [panoInfo, setPanoInfo] = useState<PanoInfo | null>(null);
 
   useEffect(() => {
+    if (!projectId || !dateStr) {
+      return;
+    }
+
     fetchPanoInfo(projectId, dateStr)
       .then((panoInfo: PanoInfo) => {
         setPanoInfo(panoInfo);

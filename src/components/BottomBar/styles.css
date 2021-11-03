@@ -1,5 +1,4 @@
 .bottom-wrapper {
-  pointer-events: none;
   position: fixed;
   left: 50%;
   bottom: 10px;
@@ -35,7 +34,7 @@
 }
 
 .bottom-wrapper .bar-theme {
-  display: inline-block;
+  display: flex;
 }
 
 .bottom-wrapper .bar-theme .button {

@@ -108,7 +108,8 @@ const useBlueprint = (props: UseBlueprintProps): void => {
 
     const blueprintRenderOpts = getBlueprintRenderOptsFromImg(bgImg$);
 
-    addWalkPathToCanvas(canvas$, markers, pathWidth, blueprintRenderOpts);
+    // NOTE: Nov 2, 2021, product doesn't want to render walking path right now
+    //addWalkPathToCanvas(canvas$, markers, pathWidth, blueprintRenderOpts);
 
     addMarkersToCanvas(canvas$, markers, {
       ...blueprintRenderOpts,

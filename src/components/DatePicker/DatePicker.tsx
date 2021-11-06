@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -7,9 +7,9 @@ import StaticDatePicker from '@mui/lab/StaticDatePicker';
 import { ThemeProvider } from '@emotion/react';
 import { createTheme } from '@material-ui/core/styles';
 
-import { useDatePickerData } from '../../hooks';
 import { useDatePickerContext } from '../../context/DatePickerContext/useDatePickerContext';
 import { usePanoramaContext } from '../../context/PanoramaContext/usePanoramaContext';
+import { Panorama } from '../../models/panorama';
 
 import './styles.css';
 
@@ -22,31 +22,54 @@ export function PanoDatePicker() {
       },
     },
   });
-  const [value, setValue] = React.useState<Date | null>(new Date());
 
-  const { datePicker } = useDatePickerContext();
-  const { currentScene, setCurrentScene } = usePanoramaContext();
-  const { availablePanos } = useDatePickerData();
+  const { datePicker, setDatePicker } = useDatePickerContext();
 
-  const onDateChange = (newValue: Date | null) => {
-    if (currentScene === 'pano-image/R0140118.JPG') {
-      setCurrentScene('pano-image/R0140102.JPG');
-    } else {
-      setCurrentScene('pano-image/R0140118.JPG');
+  const {
+    gridPanoramas,
+    selectedDateStr,
+
+    setSelectedDateStr,
+  } = usePanoramaContext();
+
+  const selectedDate =
+    selectedDateStr && getDateWithUTCOffset(new Date(selectedDateStr));
+
+  const minMaxDate = useMemo(
+    () => getPanosMinMaxDate(gridPanoramas).map(getDateWithUTCOffset),
+    [gridPanoramas],
+  );
+
+  useEffect(() => {
+    if (!minMaxDate.length) {
+      return;
     }
 
-    setValue(newValue);
-  };
+    const newDate = getDateStr(minMaxDate[1]);
 
-  const disableDateWithoutScenes = (date: Date) => {
-    for (const availablePano of availablePanos) {
-      if (new Date(availablePano.date).getTime() === date.getTime()) {
-        if (availablePano.scenes !== 0) return false;
-      }
+    setSelectedDateStr(newDate);
+  }, [minMaxDate, setSelectedDateStr]);
+
+  if (!gridPanoramas.length || !selectedDate) {
+    return null;
+  }
+
+  const dateToIsEnabledMap = gridPanoramas.reduce((map, { scanDate }) => {
+    map[scanDate] = true;
+    return map;
+  }, {} as { [key: string]: boolean });
+
+  function onChange(date: Date | null) {
+    if (!date) {
+      return;
     }
+    setSelectedDateStr(getDateStr(date));
+    setDatePicker(false);
+  }
 
-    return true;
-  };
+  function shouldDisableDate(d: Date) {
+    return !dateToIsEnabledMap[getDateStr(d)];
+  }
 
   if (!datePicker) return null;
 
@@ -55,16 +78,44 @@ export function PanoDatePicker() {
       <div className='pano-date-picker' color='primary'>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <StaticDatePicker
-            minDate={new Date('10/01/2021')}
-            maxDate={new Date('10/30/2021')}
-            shouldDisableDate={disableDateWithoutScenes}
+            minDate={minMaxDate[0]}
+            maxDate={minMaxDate[1]}
+            shouldDisableDate={shouldDisableDate}
             displayStaticWrapperAs='desktop'
-            value={value}
-            onChange={(newValue: Date | null) => onDateChange(newValue)}
+            value={selectedDate}
+            onChange={onChange}
             renderInput={(params: any) => <TextField {...params} />}
           />
         </LocalizationProvider>
       </div>
     </ThemeProvider>
   );
+}
+
+function getPanosMinMaxDate(panoramas: Panorama[]): [Date, Date] | [] {
+  if (!panoramas.length) {
+    return [];
+  }
+  const minMaxDateTimestamp = panoramas.reduce(
+    (minMaxSoFar, { scanDate }) => {
+      return [
+        Math.min(minMaxSoFar[0], +new Date(scanDate)),
+        Math.max(minMaxSoFar[1], +new Date(scanDate)),
+      ];
+    },
+    [Infinity, -Infinity],
+  );
+
+  return [new Date(minMaxDateTimestamp[0]), new Date(minMaxDateTimestamp[1])];
+}
+
+function getDateWithUTCOffset(date: Date): Date {
+  const offset = date.getTimezoneOffset();
+  const newDate = new Date();
+  newDate.setTime(+date + offset * 60000);
+  return newDate;
+}
+
+function getDateStr(d: Date): string {
+  return d.toISOString().split('T')[0];
 }

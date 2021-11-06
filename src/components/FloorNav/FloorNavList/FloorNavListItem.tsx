@@ -1,31 +1,26 @@
 import React /*, { useCallback }*/ from 'react';
 
-import { FloorDataType } from '../../../hooks';
-import { usePanoramaContext } from '../../../context/PanoramaContext/usePanoramaContext';
-import { useFloorNavContext } from '../../../context/FloorNavContext/useFloorNavContext';
+import { Floor } from '../../../models/floor';
 
 import './styles.css';
 
-export const FloorNavListItem: React.FC<FloorDataType> = (floor) => {
-  const { setFloorNav } = useFloorNavContext();
+interface FloorNavListItemAttrs {
+  isDisabled: boolean;
+  floor: Floor;
+  onClick: (f: Floor) => void;
+}
 
-  const { currentScene, setCurrentScene } = usePanoramaContext();
-  const changeScene = () => {
-    if (currentScene === 'pano-image/R0140118.JPG') {
-      setCurrentScene('pano-image/R0140102.JPG');
-      setFloorNav(false);
-    } else {
-      setCurrentScene('pano-image/R0140118.JPG');
-      setFloorNav(false);
-    }
-  };
-
+export const FloorNavListItem: React.FC<FloorNavListItemAttrs> = ({
+  floor,
+  isDisabled,
+  onClick,
+}) => {
   return (
     <div
-      className={floor.scenes === 0 ? 'disabled-nav-item' : 'floor-nav-item'}
-      onClick={() => changeScene()}
+      className={isDisabled ? 'disabled-nav-item' : 'floor-nav-item'}
+      onClick={() => onClick(floor)}
     >
-      {floor.floor_name}
+      {floor.name}
     </div>
   );
 };

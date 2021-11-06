@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function fetchPanoImage(
+export function fetchPanoImage(
   projectId: number,
   sceneId: number,
 ): Promise<{ link: string }> {
@@ -13,26 +13,25 @@ function fetchPanoImage(
   ).then((res) => res.json());
 }
 
-function useFetchPanoImage(projectId: number, sceneId: number) {
-  const [panoImage, setPanoImage] = useState<string>('');
-  const [loading, setLoading] = useState(true);
+export function useFetchPanoImage(
+  projectId?: number,
+  panoId?: number,
+): string | undefined {
+  const [panoImage, setPanoImage] = useState<string | undefined>();
 
   useEffect(() => {
-    setLoading(true);
-    fetchPanoImage(projectId, sceneId)
+    if (!projectId || !panoId) {
+      return;
+    }
+
+    fetchPanoImage(projectId, panoId)
       .then((res) => {
         setPanoImage(res.link);
-        setLoading(false);
       })
       .catch((err) => {
         console.error('err', err);
       });
-  }, [projectId, sceneId]);
+  }, [projectId, panoId]);
 
-  return {
-    loading,
-    panoImage,
-  };
+  return panoImage;
 }
-
-export default useFetchPanoImage;

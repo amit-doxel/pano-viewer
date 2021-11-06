@@ -1,26 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import { FloorPlan } from '../FloorPlan';
 import { BottomBar } from '../BottomBar';
 
 import { useViewContext } from '../../context/ViewContext';
-import { PanoMarker } from '../Blueprint';
-
-import { useFloorPlanZoom, useFetchMarkers } from '../../hooks';
-
-import { useFetchBlueprintImage } from '../../hooks/useFetchBlueprintImage';
-
-const PROJECT_ID = 20;
-const DATE_STR = '2021-05-14';
+import { useFloorPlanZoom } from '../../hooks';
+import { usePanoramaContext } from '../../context/PanoramaContext/usePanoramaContext';
+import { View } from '../../context/ViewContext/models';
+import { PanoMarker } from '../Blueprint/models';
 
 export const BluePrintContainer: React.FC = () => {
-  const { view, zoomMethods, setZoomMethods } = useViewContext();
+  const { view, zoomMethods } = useViewContext();
+
+  const { panoramas, selectedPanorama, setSelectedPanorama, blueprintImg } =
+    usePanoramaContext();
+
   const { zoomInMethod, zoomOutMethod } = zoomMethods;
-
-  const [selectedMarker, setSelectedMarker] = useState<
-    PanoMarker | undefined
-  >();
-
   const {
     zoom: floorPlanZoom,
     onZoomChanged: onFloorPlanZoomChanged,
@@ -28,37 +23,35 @@ export const BluePrintContainer: React.FC = () => {
     zoomOutMethod: floorPlanZoomOutFn,
   } = useFloorPlanZoom(view);
 
-  useEffect(() => {
-    setZoomMethods({
-      zoomInMethod: floorPlanZoomInFn,
-      zoomOutMethod: floorPlanZoomOutFn,
-    });
-  }, []);
+  let localZoomInFn, localZoomOutFn;
 
-  const img = useFetchBlueprintImage(PROJECT_ID, DATE_STR);
+  if (view === View.FLOORPLAN) {
+    localZoomInFn = floorPlanZoomInFn;
+    localZoomOutFn = floorPlanZoomOutFn;
+  } else {
+    localZoomInFn = zoomInMethod;
+    localZoomOutFn = zoomOutMethod;
+  }
 
-  const markers = useFetchMarkers(PROJECT_ID, DATE_STR);
-
-  useEffect(() => {
-    if (!markers.length) {
-      return;
+  function onMarkerClick({ id: markerId }: PanoMarker) {
+    const pano = panoramas.find(({ id }) => id === markerId);
+    if (pano) {
+      setSelectedPanorama(pano);
     }
+  }
 
-    setSelectedMarker(markers[0]);
-  }, [markers]);
-
-  if (img !== null) {
+  if (blueprintImg) {
     return (
       <>
         <FloorPlan
-          bgImg={img}
-          markers={markers}
-          selectedMarker={selectedMarker}
-          onMarkerClick={(marker) => setSelectedMarker(marker)}
+          bgImg={blueprintImg}
+          markers={panoramas}
+          selectedMarker={selectedPanorama}
+          onMarkerClick={onMarkerClick}
           zoom={floorPlanZoom}
           onZoomChanged={onFloorPlanZoomChanged}
         />
-        <BottomBar zoomIn={zoomInMethod} zoomOut={zoomOutMethod} />
+        <BottomBar zoomIn={localZoomInFn} zoomOut={localZoomOutFn} />
       </>
     );
   } else {

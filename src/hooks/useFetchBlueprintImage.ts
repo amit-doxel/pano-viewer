@@ -15,7 +15,7 @@ function fetchBlueprintImgUrl(
 }
 
 export function useFetchBlueprintImage(projectId: number, dateStr: string) {
-  const [img, setImg] = useState<HTMLImageElement | null>(null);
+  const [img, setImg] = useState<HTMLImageElement | undefined>();
 
   useEffect(() => {
     fetchBlueprintImgUrl(projectId, dateStr)

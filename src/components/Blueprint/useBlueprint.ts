@@ -54,7 +54,6 @@ const useBlueprint = (props: UseBlueprintProps): void => {
 
   const [canvas$, setCanvas$] = useState<fabric.Canvas | null>(null);
   const [bgImg$, setBGImg$] = useState<fabric.Image | null>(null);
-  const [markers$, setMarkers$] = useState<fabric.Circle[]>([]);
 
   // set canvas and bg image
   useEffect(() => {
@@ -109,15 +108,24 @@ const useBlueprint = (props: UseBlueprintProps): void => {
 
     const blueprintRenderOpts = getBlueprintRenderOptsFromImg(bgImg$);
 
-    addWalkPathToCanvas(canvas$, markers, pathWidth, blueprintRenderOpts);
+    // NOTE: Nov 2, 2021, product doesn't want to render walking path right now
+    //addWalkPathToCanvas(canvas$, markers, pathWidth, blueprintRenderOpts);
 
-    const markers$ = addMarkersToCanvas(canvas$, markers, {
+    addMarkersToCanvas(canvas$, markers, {
       ...blueprintRenderOpts,
       onMarkerClick,
       circleRadius: markerRadius,
     });
 
-    setMarkers$(markers$);
+    if (selectedMarker) {
+      selectMarker(canvas$, selectedMarker, {
+        ...blueprintRenderOpts,
+        circleRadius: markerRadius * 0.7,
+        selectionType: selectionType,
+      });
+    }
+
+    // eslint-disable-next-line
   }, [canvas$, bgImg$, markers, onMarkerClick]);
 
   // handle wheel zooming
@@ -192,6 +200,7 @@ const useBlueprint = (props: UseBlueprintProps): void => {
       onZoomChanged &&
         onZoomChanged([localZoom, selectedMarker.x, selectedMarker.y]);
     }
+    // eslint-disable-next-line
   }, [
     canvas$,
     bgImg$,
@@ -217,8 +226,7 @@ const useBlueprint = (props: UseBlueprintProps): void => {
     };
 
     selectMarker(canvas$, selectedMarker, blueprintRenderOpts);
-  }, [selectedMarker, bgImg$, canvas$, selectionType, markers$]);
-
+  }, [selectedMarker, bgImg$, canvas$, selectionType]);
   //handle centering viewport around marker on selection change if enabled
   useEffect(() => {
     if (!selectedMarker || !bgImg$ || !canvas$ || !enableCenterOnSelect) {
@@ -337,11 +345,22 @@ function addMarkersToCanvas(
   return newMarkers$;
 }
 
+function throttleEventCallback(func: (event: any) => void, timeFrame: number) {
+  let lastTime = 0;
+  return function (e: any) {
+    const now = new Date();
+    if (+now - lastTime >= timeFrame) {
+      func(e);
+      lastTime = +now;
+    }
+  };
+}
+
 function enableZoom(
   canvas$: fabric.Canvas,
   onZoomChanged?: (zoom: PointZoom) => void,
 ): void {
-  canvas$.on(MOUSE_WHEEL_EVENT, function (event$: fabric.IEvent<WheelEvent>) {
+  function zoomEventHandler(event$: fabric.IEvent<WheelEvent>) {
     handleZoomEvent(canvas$, event$);
 
     handleBorderConstraints(canvas$);
@@ -353,7 +372,14 @@ function enableZoom(
 
     event$.e.preventDefault();
     event$.e.stopPropagation();
-  });
+  }
+
+  const throttledZoomEventHandler = throttleEventCallback(
+    zoomEventHandler,
+    300,
+  );
+
+  canvas$.on(MOUSE_WHEEL_EVENT, throttledZoomEventHandler);
 }
 
 function enableCanvasPanning(canvas$: fabric.Canvas) {

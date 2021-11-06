@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
-import { getData } from '../utils/get-data';
-import { Floor } from '../models';
+import { Floor, APIFloor } from '../models';
+import { API_SERVER_BASE_URL } from '../utils/constants';
 
-function fetchBlueprintImgUrl(
-  projectId: number,
-  dateStr: string,
-): Promise<string> {
-  return fetch(
-    `http://localhost:3000/api/v2/projects/${projectId}/panoramas?date=${dateStr}`,
-    {
-      method: 'GET',
-      credentials: 'include',
-    },
-  )
+function fetchFloors(projectId: number): Promise<Floor[]> {
+  return fetch(`${API_SERVER_BASE_URL}/projects/${projectId}/floors`, {
+    method: 'GET',
+    credentials: 'include',
+  })
     .then((res) => res.json())
-    .then((res) => {
-      return res.blueprint;
+    .then((floors: APIFloor[]) => {
+      return floors.map((floor) => {
+        const { blueprint_signed_url, ...floorParams } = floor;
+        return {
+          ...floorParams,
+          blueprintSignedUrl: blueprint_signed_url,
+        };
+      });
     });
 }
 
@@ -27,24 +27,8 @@ export function useFetchFloors(projectId: number) {
       return;
     }
 
-    getData('floors.json', 'json')
-      .then()
-      .then((localFloors: Floor[]) => {
-        const blueprints$ = localFloors.map(({ scans }) => {
-          return fetchBlueprintImgUrl(projectId, scans[0].date);
-        });
-
-        return Promise.all(blueprints$).then<[Floor[], string[]]>(
-          (blueprints) => {
-            return [localFloors, blueprints];
-          },
-        );
-      })
-      .then(([localFloors, blueprints]) => {
-        blueprints.forEach((blueprintSignedUrl, idx) => {
-          localFloors[idx].blueprintSignedUrl = blueprintSignedUrl;
-        });
-
+    fetchFloors(projectId)
+      .then((localFloors) => {
         setFloors(localFloors);
       })
       .catch((err) => {

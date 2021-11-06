@@ -1,71 +1,69 @@
 // /panoramas?scan_id={id}"
 import { useState, useEffect } from 'react';
-import { useFetchPanoInfo } from './useFetchPanoInfo';
 import { Panorama } from '../models/panorama';
-
-interface RinconScene {
-  id: number;
-  mapped_x: number;
-  mapped_y: number;
-  timestamp: number;
-}
-
-function fetchRinconScenes(
-  projectId: number,
-  dateStr: string,
-  buildingName: string,
-  floor: number,
-): Promise<RinconScene[]> {
-  return fetch(
-    `http://localhost:3000/api/v2/projects/${projectId}/panoramas/scenes?date=${dateStr}&building_name=${buildingName}&floor=${floor}`,
-    {
-      method: 'GET',
-      credentials: 'include',
-    },
-  ).then((res) => res.json());
-}
+import { Grid } from '../models/grid';
+import { fetchPanoramas } from '../utils/fetch-panoramas';
 
 export function useFetchPanoramasForScanDate(
   projectId?: number,
   scanDate?: string,
 ) {
-  //NOTE: useFetchPanoInfo is needed to be able to fetch panos from Rincon
-  const { building } = useFetchPanoInfo(projectId, scanDate) || {};
-  const { name, floor } = building || {};
-
   const [panos, setPanos] = useState<Panorama[]>([]);
+  const [grids, setGrids] = useState<Grid[]>([]);
 
   useEffect(() => {
-    if (!projectId || !scanDate || !name || !floor) {
+    if (!projectId || !scanDate) {
       return;
     }
 
-    fetchRinconScenes(projectId, scanDate, name, floor)
-      .then((scenes: RinconScene[]) => {
-        return getPanoramas(scenes, scanDate);
-      })
+    fetchPanoramas(projectId, { scanDate })
       .then((panos: Panorama[]) => {
-        return setPanos(panos);
+        const grids = getGrids(panos);
+        setGrids(grids);
+        setPanos(panos);
       })
       .catch((err) => {
         console.error('err', err);
       });
-  }, [projectId, scanDate, name, floor]);
+  }, [projectId, scanDate]);
 
-  return panos;
+  return {
+    grids,
+    setGrids,
+    panoramas: panos,
+  };
 }
 
-function getPanoramas(scenes: RinconScene[], scanDate: string): Panorama[] {
-  return scenes.map((scene: RinconScene, gridId) => {
-    const { id, mapped_x: x, mapped_y: y, timestamp } = scene;
+function getGrids(panoramas: Panorama[]): Grid[] {
+  const { grids } = panoramas.reduce(
+    (acc, panorama) => {
+      const { map, grids } = acc;
 
-    return {
-      id,
-      gridId,
-      scanDate,
-      timestamp,
-      x,
-      y,
-    };
-  });
+      const {
+        grid: { x, y },
+      } = panorama;
+      const gridId = `${x},${y}`;
+
+      if (!map[gridId]) {
+        const newGrid = {
+          id: gridId,
+          x,
+          y,
+          panoramas: [panorama],
+        };
+        map[gridId] = newGrid;
+        grids.push(newGrid);
+      } else {
+        map[gridId].panoramas.push(panorama);
+      }
+
+      return { map, grids };
+    },
+    {
+      map: {} as { [key: string]: Grid },
+      grids: [] as Grid[],
+    },
+  );
+
+  return grids;
 }

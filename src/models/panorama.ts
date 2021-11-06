@@ -1,12 +1,26 @@
-// date format 2019-10-01 00:00:00+00
-type DateTimeString = string;
+// DateStr format: "2021-10-26"
+type DateStr = string;
+type URLStr = string;
+// GridStr format: "10,10"
+type GridStr = string;
 
 export interface Panorama {
   id: number;
-  gridId: number;
-  scanDate: DateTimeString;
-  singedUrl?: string;
+  grid: { x: number; y: number };
+  signedUrl?: string;
   timestamp: number;
-  x: number;
-  y: number;
+  scanDate: DateStr;
+}
+
+export interface APIPanorama {
+  id: number;
+  signed_url?: URLStr;
+  scan_date: DateStr;
+  grid: { x: number; y: number };
+  timestamp: number;
+}
+
+export interface FetchPanoramasOpts {
+  scanDate?: DateStr;
+  grid?: GridStr;
 }

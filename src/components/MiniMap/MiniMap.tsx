@@ -6,6 +6,7 @@ import { Blueprint } from '../Blueprint';
 import { PointZoom, PanoMarker, OnMarkerClick } from '../Blueprint/models';
 
 const ZOOM_MIN_MAX = [1, 20];
+const BG_COLOR = '#373737';
 
 interface FloorPlanProps {
   bgImg: HTMLImageElement;
@@ -30,7 +31,7 @@ export const MiniMap: React.FC<FloorPlanProps> = (props) => {
   const header = (
     <div
       onClick={() => setIsCollapsed(!isCollapsed)}
-      style={{ padding: '5px 0', background: 'black', height: '18px' }}
+      style={{ padding: '5px 0', background: BG_COLOR, height: '18px' }}
     >
       <span style={{ color: 'white', float: 'left' }}>Map</span>
       <div style={{ float: 'right', paddingRight: '5px' }}>
@@ -70,7 +71,7 @@ export const MiniMap: React.FC<FloorPlanProps> = (props) => {
       style={{
         color: 'white',
         padding: '8px 0',
-        background: 'black',
+        background: BG_COLOR,
         height: '18px',
       }}
     >
@@ -98,10 +99,10 @@ export const MiniMap: React.FC<FloorPlanProps> = (props) => {
         position: 'absolute',
         left: '10px',
         bottom: '10px',
-        border: '5px solid black',
+        border: `5px solid ${BG_COLOR}`,
         borderRadius: '5px',
         width: '180px',
-        background: 'black',
+        background: BG_COLOR,
       }}
     >
       {header}

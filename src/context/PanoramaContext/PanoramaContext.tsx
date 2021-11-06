@@ -1,6 +1,7 @@
 import { createContext } from 'react';
 import { Panorama } from '../../models/panorama';
 import { Floor } from '../../models';
+import { Grid } from '../../models/grid';
 
 export type PanoramaContextValue = {
   projectId: number;
@@ -11,6 +12,8 @@ export type PanoramaContextValue = {
   selectedFloor?: Floor;
   blueprintImg?: HTMLImageElement;
   panoramas: Panorama[];
+  grids: Grid[];
+  selectedGrid?: Grid;
   gridPanoramas: Panorama[];
   selectedPanorama?: Panorama;
   selectNextPanorama: () => void;
@@ -20,6 +23,8 @@ export type PanoramaContextValue = {
   setBuildingName: (value: string) => any;
   setSelectedPanorama: (pm: Panorama) => void;
   setSelectedFloor: (f: Floor) => void;
+  setSelectedGrid: (f: Grid) => void;
+  onDateChange: (date: string, panorama?: Panorama) => void;
 };
 
 export const PanoramaContext = createContext({
@@ -29,10 +34,13 @@ export const PanoramaContext = createContext({
   setBuildingName: (value: string) => null,
   floors: [] as Floor[],
   panoramas: [] as Panorama[],
+  grids: [] as Grid[],
   gridPanoramas: [] as Panorama[],
   setSelectedPanorama: (p: Panorama) => {},
   selectNextPanorama: () => {},
   selectPrevPanorama: () => {},
   setSelectedDateStr: (s: string) => {},
   setSelectedFloor: (f: Floor) => {},
+  setSelectedGrid: (f: Grid) => {},
+  onDateChange: (date: string, panorama?: Panorama) => {},
 });

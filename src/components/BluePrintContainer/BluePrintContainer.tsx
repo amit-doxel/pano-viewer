@@ -12,7 +12,7 @@ import { PanoMarker } from '../Blueprint/models';
 export const BluePrintContainer: React.FC = () => {
   const { view, zoomMethods } = useViewContext();
 
-  const { panoramas, selectedPanorama, setSelectedPanorama, blueprintImg } =
+  const { blueprintImg, grids, selectedGrid, setSelectedGrid } =
     usePanoramaContext();
 
   const { zoomInMethod, zoomOutMethod } = zoomMethods;
@@ -34,9 +34,9 @@ export const BluePrintContainer: React.FC = () => {
   }
 
   function onMarkerClick({ id: markerId }: PanoMarker) {
-    const pano = panoramas.find(({ id }) => id === markerId);
-    if (pano) {
-      setSelectedPanorama(pano);
+    const grid = grids.find(({ id }) => id === markerId);
+    if (grid) {
+      setSelectedGrid(grid);
     }
   }
 
@@ -45,8 +45,8 @@ export const BluePrintContainer: React.FC = () => {
       <>
         <FloorPlan
           bgImg={blueprintImg}
-          markers={panoramas}
-          selectedMarker={selectedPanorama}
+          markers={grids}
+          selectedMarker={selectedGrid}
           onMarkerClick={onMarkerClick}
           zoom={floorPlanZoom}
           onZoomChanged={onFloorPlanZoomChanged}

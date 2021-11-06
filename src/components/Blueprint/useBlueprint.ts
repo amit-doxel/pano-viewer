@@ -23,13 +23,14 @@ import {
   CANVAS_OPTS,
   IMG_OPTS,
   BLUEPRINT_RENDER_OPTS_INIT_STATE,
-  PATH_DEFAULT_OPTIONS,
+  //PATH_DEFAULT_OPTIONS,
   MARKER_DEFAULT_OPTIONS,
 } from './constants';
 
 import {
   deriveMarkerRadius,
-  derivePathWidth,
+  // NOTE: Nov 2, 2021, product doesn't want to render walking path right now
+  //derivePathWidth,
   getFabricImageScaleFactor,
   getBlueprintRenderOptsFromImg,
   addImageToCanvas,
@@ -104,11 +105,10 @@ const useBlueprint = (props: UseBlueprintProps): void => {
 
     const markerRadius = deriveMarkerRadius(bgImg$);
 
-    const pathWidth = derivePathWidth(bgImg$);
-
     const blueprintRenderOpts = getBlueprintRenderOptsFromImg(bgImg$);
 
     // NOTE: Nov 2, 2021, product doesn't want to render walking path right now
+    //const pathWidth = derivePathWidth(bgImg$);
     //addWalkPathToCanvas(canvas$, markers, pathWidth, blueprintRenderOpts);
 
     addMarkersToCanvas(canvas$, markers, {
@@ -211,7 +211,12 @@ const useBlueprint = (props: UseBlueprintProps): void => {
 
   // handle marker selection
   useEffect(() => {
-    if (!selectedMarker || !bgImg$ || !canvas$) {
+    if (!bgImg$ || !canvas$) {
+      return;
+    }
+
+    if (!selectedMarker) {
+      removeCachedSelectionMarker(canvas$);
       return;
     }
 
@@ -278,40 +283,41 @@ const useBlueprint = (props: UseBlueprintProps): void => {
   }, [canvas$, zoom, bgImg$, enableCenterOnSelect, selectedMarker]);
 };
 
-function addWalkPathToCanvas(
-  canvas$: fabric.Canvas,
-  markers: PanoMarker[],
-  pathWidth: number,
-  opts: BlueprintRenderOpts = BLUEPRINT_RENDER_OPTS_INIT_STATE,
-): void {
-  const imgScaleFactor = opts?.imgScaleFactor || 1;
-  const topImgOffset = opts?.topImgOffset || 0;
-  const leftImgOffset = opts?.leftImgOffset || 0;
-
-  const path$ = getFromCanvasCache(canvas$, 'WALK_PATH');
-
-  if (path$) {
-    canvas$.remove(path$);
-  }
-
-  const pathStr = markers.reduce((acc, { x, y }) => {
-    return (
-      acc +
-      ` ${x * imgScaleFactor + leftImgOffset} ${
-        y * imgScaleFactor + topImgOffset
-      }`
-    );
-  }, 'M');
-
-  const newPath$ = new fabric.Path(pathStr, {
-    ...PATH_DEFAULT_OPTIONS,
-    strokeWidth: pathWidth,
-  });
-
-  setCanvasCache(canvas$, 'WALK_PATH', newPath$);
-
-  canvas$.add(newPath$);
-}
+// NOTE: Nov 2, 2021, product doesn't want to render walking path right now
+//function addWalkPathToCanvas(
+//  canvas$: fabric.Canvas,
+//  markers: PanoMarker[],
+//  pathWidth: number,
+//  opts: BlueprintRenderOpts = BLUEPRINT_RENDER_OPTS_INIT_STATE,
+//): void {
+//  const imgScaleFactor = opts?.imgScaleFactor || 1;
+//  const topImgOffset = opts?.topImgOffset || 0;
+//  const leftImgOffset = opts?.leftImgOffset || 0;
+//
+//  const path$ = getFromCanvasCache(canvas$, 'WALK_PATH');
+//
+//  if (path$) {
+//    canvas$.remove(path$);
+//  }
+//
+//  const pathStr = markers.reduce((acc, { x, y }) => {
+//    return (
+//      acc +
+//      ` ${x * imgScaleFactor + leftImgOffset} ${
+//        y * imgScaleFactor + topImgOffset
+//      }`
+//    );
+//  }, 'M');
+//
+//  const newPath$ = new fabric.Path(pathStr, {
+//    ...PATH_DEFAULT_OPTIONS,
+//    strokeWidth: pathWidth,
+//  });
+//
+//  setCanvasCache(canvas$, 'WALK_PATH', newPath$);
+//
+//  canvas$.add(newPath$);
+//}
 
 function addMarkersToCanvas(
   canvas$: fabric.Canvas,
@@ -554,15 +560,19 @@ function addPinSelector(
   marker: PanoMarker,
   opts: BlueprintRenderOpts = BLUEPRINT_RENDER_OPTS_INIT_STATE,
 ): void {
+  removeCachedSelectionMarker(canvas$);
+
+  const newPin$ = addPinToCanvas(canvas$, marker, opts);
+
+  setCanvasCache(canvas$, 'PIN_MARKER', newPin$);
+}
+
+function removeCachedSelectionMarker(canvas$: fabric.Canvas) {
   const lastPin$ = getFromCanvasCache(canvas$, 'PIN_MARKER');
 
   if (lastPin$) {
     canvas$.remove(lastPin$);
   }
-
-  const newPin$ = addPinToCanvas(canvas$, marker, opts);
-
-  setCanvasCache(canvas$, 'PIN_MARKER', newPin$);
 }
 
 function addInnerCircleSelector(
@@ -572,11 +582,7 @@ function addInnerCircleSelector(
 ): void {
   const circleRadius = opts?.circleRadius || MARKER_RADIUS * 0.7;
 
-  const lastPin$ = getFromCanvasCache(canvas$, 'PIN_MARKER');
-
-  if (lastPin$) {
-    canvas$.remove(lastPin$);
-  }
+  removeCachedSelectionMarker(canvas$);
 
   const circle$ = addCircleToCanvas(canvas$, marker, {
     ...opts,

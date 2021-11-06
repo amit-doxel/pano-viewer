@@ -1,4 +1,22 @@
 import { useState, useEffect } from 'react';
+import { APIPanorama, Panorama } from '../models/panorama';
+import { API_SERVER_BASE_URL } from '../utils/constants';
+
+function fetchPanoramaDetails(id: number): Promise<Panorama> {
+  return fetch(`${API_SERVER_BASE_URL}/panoramas/${id}`, {
+    method: 'GET',
+    credentials: 'include',
+  })
+    .then((res) => res.json())
+    .then((panorama: APIPanorama) => {
+      const { signed_url, scan_date, ...panoParams } = panorama;
+      return {
+        ...panoParams,
+        signedUrl: signed_url,
+        scanDate: scan_date,
+      };
+    });
+}
 
 export function fetchPanoImage(
   projectId: number,
@@ -13,25 +31,22 @@ export function fetchPanoImage(
   ).then((res) => res.json());
 }
 
-export function useFetchPanoImage(
-  projectId?: number,
-  panoId?: number,
-): string | undefined {
+export function useFetchPanoImage(panoId?: number): string | undefined {
   const [panoImage, setPanoImage] = useState<string | undefined>();
 
   useEffect(() => {
-    if (!projectId || !panoId) {
+    if (!panoId) {
       return;
     }
 
-    fetchPanoImage(projectId, panoId)
-      .then((res) => {
-        setPanoImage(res.link);
+    fetchPanoramaDetails(panoId)
+      .then((pano) => {
+        setPanoImage(pano.signedUrl!);
       })
       .catch((err) => {
         console.error('err', err);
       });
-  }, [projectId, panoId]);
+  }, [panoId]);
 
   return panoImage;
 }

@@ -6,7 +6,7 @@ export type FabricImage = fabric.Image;
 type SelectionType = 'pin' | 'inner_circle';
 
 export interface PanoMarker {
-  id: number;
+  id: number | string;
   x: number;
   y: number;
 }

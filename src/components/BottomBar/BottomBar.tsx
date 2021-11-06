@@ -15,13 +15,13 @@ export interface BottomBarProp {
 }
 
 export const BottomBar: React.FC<BottomBarProp> = ({ zoomIn, zoomOut }) => {
-  const { panoramas, selectedPanorama, setSelectedPanorama, blueprintImg } =
+  const { blueprintImg, grids, selectedGrid, setSelectedGrid } =
     usePanoramaContext();
 
   function onMarkerClick({ id: markerId }: PanoMarker) {
-    const pano = panoramas.find(({ id }) => id === markerId);
-    if (pano) {
-      setSelectedPanorama(pano);
+    const grid = grids.find(({ id }) => id === markerId);
+    if (grid) {
+      setSelectedGrid(grid);
     }
   }
 
@@ -34,8 +34,8 @@ export const BottomBar: React.FC<BottomBarProp> = ({ zoomIn, zoomOut }) => {
       {shouldShowMinimap && (
         <MiniMap
           bgImg={blueprintImg}
-          markers={panoramas}
-          selectedMarker={selectedPanorama}
+          markers={grids}
+          selectedMarker={selectedGrid}
           onMarkerClick={onMarkerClick}
         />
       )}

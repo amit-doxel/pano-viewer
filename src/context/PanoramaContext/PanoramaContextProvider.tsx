@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import {
   useFetchPanoramasForScanDate,
@@ -10,8 +10,8 @@ import { PanoramaContextValue, PanoramaContext } from './PanoramaContext';
 import { Panorama } from '../../models/panorama';
 import { Floor } from '../../models/floor';
 import { getImageFromUrl } from '../../components/Blueprint';
-
-const PROJECT_ID = 17;
+import { PROJECT_ID } from '../../utils/constants';
+import { Grid } from '../../models/grid';
 
 export const PanoramaContextProvider: React.FC = ({ children }) => {
   const [projectId, setProjectId] = useState(PROJECT_ID);
@@ -19,21 +19,30 @@ export const PanoramaContextProvider: React.FC = ({ children }) => {
   const [selectedPanorama, setSelectedPanorama] = useState<
     Panorama | undefined
   >();
+  const [selectedGrid, setSelectedGrid] = useState<Grid | undefined>();
   const [selectedFloor, setSelectedFloor] = useState<Floor | undefined>();
-  const [selectedGridId, setSelectedGridId] = useState<number | undefined>();
   const [selectedDateStr, setSelectedDateStr] = useState<string | undefined>();
   const [blueprintImg, setBlueprintImg] = useState<
     HTMLImageElement | undefined
   >();
 
+  console.log('selectedGrid', selectedGrid);
+
   const floors = useFetchFloors(projectId);
 
-  const panoramas = useFetchPanoramasForScanDate(projectId, selectedDateStr);
+  const { grids, panoramas, setGrids } = useFetchPanoramasForScanDate(
+    projectId,
+    selectedDateStr,
+  );
+
+  const selectedGridId = selectedGrid && selectedGrid.id;
+
   const gridPanoramas = useFetchGridPanos(projectId, selectedGridId);
 
   const panoId = selectedPanorama && selectedPanorama.id;
-  const currentScene = useFetchPanoImage(projectId, panoId);
+  const currentScene = useFetchPanoImage(panoId);
 
+  // set default selected floor
   useEffect(() => {
     if (!floors.length) {
       return;
@@ -42,13 +51,14 @@ export const PanoramaContextProvider: React.FC = ({ children }) => {
     setSelectedFloor(floor);
   }, [floors, setSelectedFloor]);
 
+  // get blueprint image
   useEffect(() => {
     if (!selectedFloor) {
       return;
     }
 
     const { blueprintSignedUrl } = selectedFloor;
-    const { date } = selectedFloor.scans[0];
+    const date = selectedFloor.scans[selectedFloor.scans.length - 1];
 
     setSelectedDateStr(date);
 
@@ -61,14 +71,55 @@ export const PanoramaContextProvider: React.FC = ({ children }) => {
       });
   }, [selectedFloor, setSelectedDateStr]);
 
+  //set default selected grid
   useEffect(() => {
-    if (!panoramas.length) {
+    if (!grids.length || selectedGrid != null) {
       return;
     }
-    const panorama = panoramas[0];
-    setSelectedPanorama(panorama);
-    setSelectedGridId(panorama.gridId);
-  }, [panoramas, setSelectedPanorama]);
+    const grid = grids[0];
+    setSelectedGrid(grid);
+  }, [grids, selectedGrid, setSelectedGrid]);
+
+  // set panorama image when grid changes
+  useEffect(() => {
+    if (!selectedGrid) {
+      return;
+    }
+    setSelectedPanorama(selectedGrid.panoramas[0]);
+  }, [selectedGrid, setSelectedPanorama]);
+
+  const onDateChange = useCallback(
+    function (dateStr: string, panorama?: Panorama) {
+      if (panorama) {
+        setSelectedPanorama(panorama);
+      } else {
+        // reset values so defalt values get picked up
+        setGrids([]);
+        setSelectedGrid(undefined);
+        setSelectedPanorama(undefined);
+      }
+      setSelectedDateStr(dateStr);
+    },
+    [setSelectedDateStr, setGrids],
+  );
+
+  const selectNextPanorama = useCallback(() => {
+    if (!selectedPanorama) {
+      return;
+    }
+    const idx = panoramas.findIndex(({ id }) => selectedPanorama.id === id);
+    const nextIdx = idx + 1 < panoramas.length ? idx + 1 : 0;
+    setSelectedPanorama(panoramas[nextIdx]);
+  }, [panoramas, selectedPanorama, setSelectedPanorama]);
+
+  const selectPrevPanorama = useCallback(() => {
+    if (!selectedPanorama) {
+      return;
+    }
+    const idx = panoramas.findIndex(({ id }) => selectedPanorama.id === id);
+    const nextIdx = idx - 1 >= 0 ? idx - 1 : panoramas.length - 1;
+    setSelectedPanorama(panoramas[nextIdx]);
+  }, [panoramas, selectedPanorama, setSelectedPanorama]);
 
   const context: PanoramaContextValue = {
     currentScene: currentScene,
@@ -77,6 +128,7 @@ export const PanoramaContextProvider: React.FC = ({ children }) => {
     setProjectId: setProjectId,
     setBuildingName: setBuildingName,
     panoramas,
+    grids,
     floors,
     selectedFloor,
     blueprintImg,
@@ -86,22 +138,11 @@ export const PanoramaContextProvider: React.FC = ({ children }) => {
     setSelectedDateStr,
     setSelectedPanorama,
     setSelectedFloor,
-    selectNextPanorama: () => {
-      if (!selectedPanorama) {
-        return;
-      }
-      const idx = panoramas.indexOf(selectedPanorama);
-      const nextIdx = idx + 1 < panoramas.length ? idx + 1 : 0;
-      setSelectedPanorama(panoramas[nextIdx]);
-    },
-    selectPrevPanorama: () => {
-      if (!selectedPanorama) {
-        return;
-      }
-      const idx = panoramas.indexOf(selectedPanorama);
-      const nextIdx = idx - 1 >= 0 ? idx - 1 : panoramas.length - 1;
-      setSelectedPanorama(panoramas[nextIdx]);
-    },
+    selectedGrid,
+    setSelectedGrid,
+    onDateChange,
+    selectNextPanorama,
+    selectPrevPanorama,
   };
 
   return (

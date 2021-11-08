@@ -13,8 +13,19 @@
   cursor: pointer;
 }
 
-@media only screen and (max-width: 768px) {
+.mid-space {
+  z-index: -1;
+  width: 100%;
+}
+
+@media only screen and (max-width: 600px), (orientation: landscape) {
   .arrow-wrapper {
     top: 85vh;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .arrow-wrapper {
+    top: 55%;
   }
 }

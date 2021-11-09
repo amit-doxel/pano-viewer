@@ -14,11 +14,6 @@ export const CalenderPicker: React.FC = () => {
   const { selectedFloor, gridPanoramas, selectedDateStr, onDateChange } =
     usePanoramaContext();
 
-  // Available date
-  // if Floorplan then dates come from floor
-  // if pano then dates come from grid
-  //
-  // if
   const { view } = useViewContext();
 
   const availableDates = useMemo(() => {

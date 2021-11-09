@@ -12,6 +12,7 @@ import { Floor } from '../../models/floor';
 import { getImageFromUrl } from '../../components/Blueprint';
 import { PROJECT_ID } from '../../utils/constants';
 import { Grid } from '../../models/grid';
+import { getGridId } from "../../utils/grids";
 
 export const PanoramaContextProvider: React.FC = ({ children }) => {
   const [projectId, setProjectId] = useState(PROJECT_ID);
@@ -70,6 +71,24 @@ export const PanoramaContextProvider: React.FC = ({ children }) => {
         console.error('getImageFromUrl: could not get img from url', err);
       });
   }, [selectedFloor, setSelectedDateStr]);
+
+  //update selected grid if needed when panorama changes
+  useEffect(() => {
+    if (!selectedPanorama || !grids.length) {
+      return;
+    }
+
+    const selectedGridId = selectedGrid && selectedGrid.id;
+    const newGridId = getGridId(selectedPanorama);
+
+    if (selectedGridId === newGridId) {
+      return;
+    }
+
+    const newSelectedGrid = grids.find(({id}) => id === newGridId);
+
+    setSelectedGrid(newSelectedGrid);
+  }, [grids, selectedPanorama, selectedGrid, setSelectedGrid]);
 
   //set default selected grid
   useEffect(() => {

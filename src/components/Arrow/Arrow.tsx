@@ -11,6 +11,7 @@ export const Arrow: React.FC = () => {
         <div onClick={() => selectPrevPanorama()}>
           <img src='/assets/icons/left-arrow.svg' alt='arrow-icon'></img>
         </div>
+        <div className='mid-space'></div>
         <div onClick={() => selectNextPanorama()}>
           <img src='/assets/icons/right-arrow.svg' alt='arrow-icon'></img>
         </div>

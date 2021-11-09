@@ -12,7 +12,7 @@
   border-radius: 5px;
 }
 
-@media only screen and (max-height: 928px) {
+@media only screen and (max-height: 928px) and (orientation: landscape) {
   .left-wrapper {
     top: 10%;
   }

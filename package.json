@@ -37,6 +37,11 @@
     "prettier": "prettier --check --ignore-path=../../.gitignore \"src/**/*.{js,jsx,ts,tsx,json,css,html}\"",
     "prettier-fix": "prettier --write --ignore-path=../../.gitignore \"src/**/*.{js,jsx,ts,tsx,json,css,html}\""
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prettier-fix"
+    }
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -56,6 +61,8 @@
     ]
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
+    "husky": "^7.0.4",
     "prettier": "2.4.1"
   }
 }

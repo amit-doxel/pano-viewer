@@ -19,7 +19,7 @@ export const PanoContainer: React.FC = () => {
       zoomInMethod: () => zoomInFunction(camera),
       zoomOutMethod: () => zoomOutFunction(camera),
     });
-  }, []);
+  }, [camera, setZoomMethods]);
 
   return (
     <>
